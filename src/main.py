@@ -8,7 +8,7 @@ Main File, run this to run the bot
 """
 # TODO: Logging, Runtime parameters
 
-COGS = []
+COGS = ["admin"]
 
 
 def main():
