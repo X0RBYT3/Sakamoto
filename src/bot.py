@@ -26,7 +26,7 @@ class shinobuClient(commands.Bot):
         self.secrets = secrets
         for cog in cogs:
             try:
-                self.load_extension(f'Cogs.{cog}.main')
+                self.load_extension(f"cogs.{cog}.main")
             except Exception as e:
                 exc = f'{type(e).__name__}: {e}'
                 print(f'Cog Loading Failed: {cog}\n{exc}')
