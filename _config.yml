@@ -1,1 +1,11 @@
+# Welcome to Sakamoto's Github Pages 
+# Made with Jekyll
+# I've never ever used Jekyll (or github pages for that matter) so a lot of this is going to be playtesting
+# If anyone fancies telling me what the heck I'm doing tho... :) 
+
 theme: jekyll-theme-hacker
+title: Sakamoto
+author: Nekurone
+
+avatar: "https://i.imgur.com/3VPTx2K.gif"
+round-avatar: true
