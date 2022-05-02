@@ -1,6 +1,6 @@
 from os.path import exists
 
-from bot import shinobuClient
+from bot import sakaClient
 from core.config import get_secrets
 
 """
@@ -18,8 +18,8 @@ def main():
         )
         return
     secrets = get_secrets()
-    client = shinobuClient(COGS, secrets)
-    print(f"Booting Shinobu with {len(COGS)} Cogs")
+    client = sakaClient(COGS, secrets)
+    print(f"Booting Sakamoto with {len(COGS)} Cogs")
     client.run(secrets["TOKEN"])
 
 

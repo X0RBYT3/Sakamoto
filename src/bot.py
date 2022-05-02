@@ -21,7 +21,7 @@ class MyHelpCommand(commands.MinimalHelpCommand):
         await destination.send(embed=e)
 
 
-class shinobuClient(commands.Bot):
+class sakaClient(commands.Bot):
     def __init__(self, cogs: list, secrets: dict):
         super().__init__(command_prefix=PREFIX, case_insensitive=True)
         self.help_command = MyHelpCommand()

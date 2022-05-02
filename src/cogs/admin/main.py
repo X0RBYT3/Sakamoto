@@ -32,7 +32,7 @@ class AdminCog(commands.Cog):
         self.last_cog = ""
 
     @commands.command(
-        name="shutdown", help="Shuts down Shinobu. Used only for emergencies"
+        name="shutdown", help="Shuts down Sakamoto. Used only for emergencies"
     )
     @commands.check(mod_check)
     async def _shutdown(self, ctx: commands.Context):
