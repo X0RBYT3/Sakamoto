@@ -6,31 +6,12 @@ from random import randint, choice
 import discord
 from discord.ext import commands
 
-from core.utils.chat_formatter import humanize_timedelta, escape
-
-# Ew american spelling
+from core.utils.chat_formatter import escape
+from cogs.misc.about import AboutView, get_client_uptime, gen_about_embed
 
 
 def setup(client):
     client.add_cog(Misc(client))
-
-
-def get_client_uptime(uptime, brief=False):
-    """
-    works well enough for what it does
-    have a feeling it could be better
-    """
-    now = datetime.datetime.now()
-    delta = now - uptime
-    hours, remainder = divmod(int(delta.total_seconds()), 3600)
-    minutes, seconds = divmod(remainder, 60)
-    days, hours = divmod(hours, 24)
-    if brief:
-        fmt = "{h}h {m}m {s}s"
-        if days:
-            fmt = "{d}d " + fmt
-        return fmt.format(d=days, h=hours, m=minutes, s=seconds)
-    return humanize_timedelta(delta)
 
 
 class Misc(commands.Cog):
@@ -46,13 +27,22 @@ class Misc(commands.Cog):
     def __init__(self, client):
         self.client = client
 
+    @commands.command(
+        name="about", usage="!about", aliases=["info", "sakamoto", "author"]
+    )
+    async def _about(self, ctx: commands.Context):
+        e = gen_about_embed(self.client)
+        await ctx.send(embed=e, view=AboutView(ctx))
+
     @commands.command(name="git", usage="!github", aliases=["source", "github"])
     async def _git(self, ctx: commands.Context):
         """
         Links to the Github repo
         """
         ## TODO: Expand Command to include subcommands such as !git issue
-        await ctx.send("https://github.com/Nekurone/Sakamoto")
+        await ctx.send(
+            "See my code and give me a star at: https://github.com/Nekurone/Sakamoto"
+        )
 
     @commands.command(name="ping", usage="!ping", aliases=["pong"])
     async def _ping(self, ctx: commands.Context):

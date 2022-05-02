@@ -29,6 +29,7 @@ class sakaClient(commands.Bot):
         self.help_command = MyHelpCommand()
         self.secrets = secrets
         self.uptime = datetime.now()
+        self._version = "0.0.1"  # Make this Magic
         for cog in cogs:
             try:
                 self.load_extension(f"cogs.{cog}.main")
