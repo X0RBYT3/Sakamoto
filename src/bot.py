@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import discord
 from discord.ext import commands
 
@@ -26,6 +28,7 @@ class sakaClient(commands.Bot):
         super().__init__(command_prefix=PREFIX, case_insensitive=True)
         self.help_command = MyHelpCommand()
         self.secrets = secrets
+        self.uptime = datetime.now()
         for cog in cogs:
             try:
                 self.load_extension(f"cogs.{cog}.main")
