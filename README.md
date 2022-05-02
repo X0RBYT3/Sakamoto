@@ -1,5 +1,5 @@
 <!-- HEADER -->
-<p align="center"><img alt="Sakamoto Pic" src="https://static.wikia.nocookie.net/nichijou/images/2/26/Sakamoto.png/revision/latest?cb=20190531163434" height=300 width=200></p>
+<p align="center"><img alt="Sakamoto Pic" src="https://i.imgur.com/mLQ3T06.png" height=300 width=200></p>
 <h1 align="center">Sakamoto: The Discord Bot</h1>
 
 <!-- BADGES -->
