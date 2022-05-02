@@ -22,7 +22,6 @@ def check_for_push(msg: discord.Message) -> bool:
 
 
 async def pull_and_reload(client: discord.Client):
-
     repo = git.Repo(GIT_PATH)
     current = repo.head.commit
     repo.remotes.origin.pull()

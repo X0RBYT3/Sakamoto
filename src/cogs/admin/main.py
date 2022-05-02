@@ -8,7 +8,7 @@ from cogs.admin.gitpull import check_for_push, pull_and_reload
 
 
 def setup(client):
-    client.add_cog(AdminCog(client))
+    client.add_cog(Admin(client))
 
 
 def mod_check(ctx: commands.Context) -> bool:
