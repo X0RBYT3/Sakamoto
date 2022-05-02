@@ -3,16 +3,27 @@
 <h1 align="center">Sakamoto: The Discord Bot</h1>
 
 <!-- BADGES -->
-<p align="center"><a href="https://forthebadge.com" target="_blank"><img src="https://forthebadge.com/images/badges/built-with-love.svg" alt="Build with <3" height="35"/></a>&nbsp;<a href="https://forthebadge.com" target="_blank"><img src="https://forthebadge.com/images/badges/made-with-python.svg" alt="Made with python" height="35" /></a>&nbsp;<a href="https://forthebadge.com" target="_blank"><img src="https://forthebadge.com/images/badges/powered-by-coffee.svg" height="35"/></p>
+<p align="center">
+  <a href="https://forthebadge.com" target="_blank">
+    <img src="https://forthebadge.com/images/badges/built-with-love.svg" alt="Build with <3" height="35"/>
+  </a>
+  &nbsp;
+  <a href="https://forthebadge.com" target="_blank">
+    <img src="https://forthebadge.com/images/badges/made-with-python.svg" alt="Made with python" height="35" />
+  </a>
+  &nbsp;
+  <a href="https://forthebadge.com" target="_blank">
+    <img src="https://forthebadge.com/images/badges/powered-by-coffee.svg" height="35"/>
+  </a>
 
 <p align="center">
   <a
   href="https://github.com/psf/black"
    target="_blank">
-      <img 
-        src="https://img.shields.io/badge/code%20style-black-000000.svg" 
+      <img
+        src="https://img.shields.io/badge/code%20style-black-000000.svg"
         alt="Code style: black" height="20" />
-  </a>&nbsp;
+  </a>
 <a href="http://makeapullrequest.com" target="_blank"><img src="https://img.shields.io/badge/PRs-welcome-bcentergreen.svg?style=shields" height="20"/>&nbsp;</a>  
 
 <!-- ABSTRACT -->
