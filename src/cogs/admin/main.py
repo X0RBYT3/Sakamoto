@@ -22,7 +22,7 @@ def mod_check(ctx: commands.Context) -> bool:
     return False
 
 
-class AdminCog(commands.Cog):
+class Admin(commands.Cog):
     """
     Handles Cog Control / Shutting Down / Git Pulling
 

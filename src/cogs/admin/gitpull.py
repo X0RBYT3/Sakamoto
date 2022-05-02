@@ -29,8 +29,8 @@ async def pull_and_reload(client: discord.Client):
     print("Pulling")
     for cog in client.cogs:
         try:
-            client.unload_extension(f"cogs.{cog}.main")
-            client.load_extension(f"cogs.{cog}.main")
+            client.unload_extension(f"cogs.{cog.lower()}.main")
+            client.load_extension(f"cogs.{cog.lower()}.main")
         except Exception as e:
             print(f"Error with {cog}: {type(e).__name__} - {e}")
         else:
