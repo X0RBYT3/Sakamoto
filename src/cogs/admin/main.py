@@ -1,9 +1,10 @@
 import subprocess
 
 import asyncio
-
 from discord.ext import commands
 import discord
+
+from cogs.admin.gitpull import check_for_push, pull_and_reload
 
 
 def setup(client):
@@ -46,7 +47,7 @@ class AdminCog(commands.Cog):
     @commands.check(mod_check)
     async def _load(self, ctx, *, cog: str):
         """Command which loads a Module.
-        Remember to use dot path. e.g: cogs.admin"""
+        eg: !reload admin"""
         try:
             if cog.lower() == "last":
                 if self.last_cog != "":
@@ -93,3 +94,13 @@ class AdminCog(commands.Cog):
         else:
             await ctx.send("**`SUCCESS`**\N{PISTOL}")
         self.last_cog = cog
+
+    @commands.command(name="test")
+    async def _test(self, ctx):
+        await pull_and_reload(self.client)
+
+    @commands.Cog.listener()
+    async def on_message(self, msg: discord.Message):
+        if check_for_push(msg):
+            # We think there's a Push to main
+            await pull_and_reload(self.client)
