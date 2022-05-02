@@ -54,7 +54,7 @@ class AdminCog(commands.Cog):
                     cog = self.last_cog
                 else:
                     await ctx.send(f"**`ERROR:`** No Last Cog")
-            self.client.load_extension(f"Cogs.{cog}.main")
+            self.client.load_extension(f"cogs.{cog}.main")
         except Exception as e:
             await ctx.send(f"**`ERROR:`** {type(e).__name__} - {e}")
         else:
