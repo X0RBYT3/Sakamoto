@@ -36,7 +36,8 @@ class Admin(commands.Cog):
     @commands.command(
         name="shutdown", help="Shuts down Sakamoto. Used only for emergencies"
     )
-    @commands.check(mod_check)
+    @commands.bot_has_permissions(send_messages=True)
+    @commands.is_owner()
     async def _shutdown(self, ctx: commands.Context):
         """
         Emergency usage only.
@@ -72,7 +73,7 @@ class Admin(commands.Cog):
     @commands.command(name="reload")
     @commands.bot_has_permissions(send_messages=True)
     @commands.is_owner()
-    async def reload_cog(self, ctx: commands.Context, cog: str):
+    async def _reload_cog(self, ctx: commands.Context, cog: str):
         """Unload a cog."""
         if cog.lower() == "last" or cog == "~":
             if self.last_cog != "":
@@ -86,7 +87,7 @@ class Admin(commands.Cog):
     @commands.command(name="synctree", aliases=["st"])
     @commands.bot_has_permissions(send_messages=True)
     @commands.is_owner()
-    async def reload_tree(self, ctx: commands.Context, guild_id: str = None):
+    async def _reload_tree(self, ctx: commands.Context, guild_id: str = None):
         """Sync application commands."""
         if guild_id:
             if guild_id == "guild" or guild_id == "~":
