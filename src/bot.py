@@ -4,6 +4,7 @@ import discord
 from discord.ext import commands
 
 from core.config import PREFIX
+from core.cogmanager import cogs_manager
 
 """
 The main Client file.
