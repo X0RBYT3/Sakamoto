@@ -16,7 +16,6 @@ async def cogs_manager(client: discord.Client, mode: str, cogs: list[str]) -> No
                 raise ValueError("Invalid mode.")
         except Exception as e:
             exc = f"{type(e).__name__}: {e}"
-            print(f"Cog Loading Failed: {cog}\n{exc}")
-            raise e
+            return f"**`ERROR:`** Cog Loading Failed: {cog}\n{exc}"
         else:
-            print(f"{cog} {mode} Successful.")
+            return f"**`SUCCESS`** - {cog} {mode}ed! \N{PISTOL}"
