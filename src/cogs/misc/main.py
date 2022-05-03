@@ -1,17 +1,46 @@
-import datetime
+from datetime import datetime, timedelta
 import time
 import re
+import asyncio
 from random import randint, choice
 
+import requests
+
 import discord
+from discord.app_commands import Choice
 from discord.ext import commands
-
+from discord import app_commands
 from core.utils.chat_formatter import escape
-from cogs.misc.about import AboutView, get_client_uptime, gen_about_embed
+from cogs.misc.about import (
+    AboutView,
+    get_client_uptime,
+    gen_about_embed,
+    PollView,
+    ExpiredPoll,
+)
 
 
-def setup(client):
-    client.add_cog(Misc(client))
+async def setup(client):
+    await client.add_cog(Misc(client))
+
+
+class Github(discord.ui.View):
+    # Could be moved into another file.
+    def __init__(self):
+        super().__init__()
+
+        self.add_item(
+            discord.ui.Button(
+                label="📄 Source code on Github.",
+                url="https://github.com/Nekurone/Sakamoto",
+            )
+        )
+        self.add_item(
+            discord.ui.Button(
+                label="🌟 Become a stargazer! 🌟",
+                url="https://github.com/nekurone/Sakamoto/stargazers",
+            )
+        )
 
 
 class Misc(commands.Cog):
@@ -27,45 +56,63 @@ class Misc(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @commands.command(
+    @commands.hybrid_command(
         name="about", usage="!about", aliases=["info", "sakamoto", "author"]
     )
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.bot_has_permissions(send_messages=True)
     async def _about(self, ctx: commands.Context):
+        """
+        Gives you info about Sakamoto
+        """
         e = gen_about_embed(self.client)
         await ctx.send(embed=e, view=AboutView(ctx))
 
-    @commands.command(name="git", usage="!github", aliases=["source", "github"])
+    @commands.hybrid_command(name="git", usage="!github", aliases=["source", "github"])
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.bot_has_permissions(send_messages=True)
     async def _git(self, ctx: commands.Context):
         """
-        Links to the Github repo
+        Links to the Github repo.
         """
-        ## TODO: Expand Command to include subcommands such as !git issue
-        await ctx.send(
-            "See my code and give me a star at: https://github.com/Nekurone/Sakamoto"
+        # Really should be moved to another file.
+        url = "https://api.github.com/repos/Nekurone/Sakamoto?page=$i&per_page=100"
+        r = requests.get(url).json()
+        stargazers = r["stargazers_count"]
+        issues = r["open_issues"]
+        desc = r["description"]
+        embed = discord.Embed(
+            title="Sakamoto Github!",
+            url="https://github.com/Nekurone/Sakamoto",
+            description=desc,
+            color=0xB81E61,
+        )
+        embed.add_field(name="⭐ Stargazers", value=stargazers, inline=True)
+        embed.add_field(name="😰 Issues", value=issues, inline=True)
+        await ctx.send(embed=embed, view=Github())
+
+    @commands.hybrid_command(name="ping", description="Ping the bot.")
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.bot_has_permissions(send_messages=True)
+    async def ping(self, ctx: commands.Context):
+        """Show latency in seconds & milliseconds"""
+        before = time.monotonic()
+        message = await ctx.send(":ping_pong: Pong !")
+        ping = (time.monotonic() - before) * 1000
+        await message.edit(
+            content=f":ping_pong: Pong ! in `{float(round(ping/1000.0,3))}s` ||{int(ping)}ms||"
         )
 
-    @commands.command(name="ping", usage="!ping", aliases=["pong"])
-    async def _ping(self, ctx: commands.Context):
-        """
-        Measures how long until a message is sent to Discord and detected.
-        """
-        ping = ctx.message
-        pong = await ctx.send("**:ping_pong:** Pong!")
-        delta = pong.created_at - ping.created_at
-        delta = int(delta.total_seconds() * 1000)
-        await pong.edit(
-            content=f":ping_pong: Pong! ({delta} ms)\n*Discord WebSocket Latency: {round(self.client.latency, 5)} ms*"
-        )
-        return
-
-    @commands.command(name="uptime", usage="!uptime")
+    @commands.hybrid_command(name="uptime", usage="!uptime")
+    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.bot_has_permissions(send_messages=True)
     async def _uptime(self, ctx: commands.Context):
         """
         Gets the time since the bot first connected to Discord
         """
         em = discord.Embed(
             title="Local time",
-            description=str(datetime.datetime.now())[:-7],
+            description=str(datetime.now())[:-7],
             colour=0x14E818,
         )
         em.set_author(
@@ -83,30 +130,72 @@ class Misc(commands.Cog):
         )
         await ctx.send(embed=em)
 
-    @commands.command(name="poll", aliases=["ynpoll", "pollstart"])
+    @commands.hybrid_command(name="poll", aliases=["ynpoll", "pollstart"])
     async def _ynpoll(self, ctx: commands.Context, *, question: str):
         """
         Asks question & then adds checkmark & "x" as reactions.
-        Thanks to Spoon for this code
+        Thanks to Spoon for original idea
+
+        Make embed -> Add buttons, when buttons are clicked, add them to list and grey out
+        after 30 secs announce result
+
         """
+
         ynpoll_embed = discord.Embed(
-            title="Yes/No Poll",
-            description="This is a yes/no poll. Please react with ✅ if yes and ❌ if no.",
+            title=f"Poll by {ctx.author}. Expires in 20 seconds.",
+            description=f"**Question**: {question}",
             timestamp=ctx.message.created_at,
+            color=discord.Color.blurple(),
         )
-        ynpoll_embed.add_field(name="Poll Question", value=f"{question}", inline=False)
-        ynpoll_embed.set_footer(
-            text=f"Poll By {ctx.author}", icon_url="https://i.imgur.com/3VPTx2K.gif"
+        poll = PollView()
+        message = await ctx.send(embed=ynpoll_embed, view=poll)
+        await asyncio.sleep(10)
+        ynpoll_embed.title = f"Poll by {ctx.author}. Poll Ended"
+        # Send forth the greyed out bits.
+        await message.edit(embed=ynpoll_embed, view=ExpiredPoll())
+        poll.stop()
+
+        # Generate Score.
+        # Easier to write this then copy paste len each time
+        yes_l = len(poll.users_yes)
+        no_l = len(poll.users_no)
+
+        result_em = discord.Embed(
+            title="Placeholder",
+            description="Placeholder",
         )
-        await ctx.message.delete()
-        message = await ctx.send(embed=ynpoll_embed)
-        emoji_1 = "✅"
-        emoji_2 = "❌"
-        await message.add_reaction(emoji_1)
-        await message.add_reaction(emoji_2)
+        # There's probably an easier way to write this.
+        if yes_l > no_l:
+            result = "Yes"
+            result_em.color = discord.Color.green()
+        elif yes_l < no_l:
+            result = "No"
+            result_em.color = discord.Color.red()
+        else:
+            result = "Draw"
+            result_em.color = discord.Color.yellow()
+        # Emoji time?
+        result_em.title = f"And the result is: **{result}**"
+        result_em.description = f"{yes_l + no_l} Voted and they voted: {result}"
+
+        # There's defo an easier way to write this in like 2 lines.
+        if yes_l == 0:
+            yes_s = "Nobody!"
+        else:
+            yes_s = ", ".join(poll.users_yes)
+        if no_l == 0:
+            no_s = "Nobody!"
+        else:
+            no_s = ", ".join(poll.users_no)
+
+        # Emojis in the fields?
+        result_em.add_field(name="People who voted Yes", value=yes_s, inline=True)
+        result_em.add_field(name="People who voted No", value=no_s, inline=True)
+        await ctx.send(embed=result_em)
 
     @commands.command(usage="<first> <second> [others...]")
     async def choose(self, ctx, *choices) -> None:
+        # TODO: Make into Interaction
         """Choose between multiple options.
         There must be at least 2 options to pick from.
         Options are separated by spaces.
@@ -120,6 +209,7 @@ class Misc(commands.Cog):
 
     @commands.command()
     async def flip(self, ctx, user: discord.Member = None):
+        # TODO: Make into Interaction
         """Flip a coin... or a user.
         Defaults to a coin.
         """
@@ -171,3 +261,40 @@ class Misc(commands.Cog):
             await ctx.send(
                 _("*flips a coin and... ") + choice([_("HEADS!*"), _("TAILS!*")])
             )
+
+    @app_commands.command(name="reminder", description="Reminds you of something.")
+    @app_commands.describe(
+        hours="Hours.",
+        minutes="Minutes.",
+        seconds="Seconds.",
+        message="Your reminder message.",
+    )
+    @app_commands.choices(
+        hours=[Choice(name=str(i), value=i) for i in range(0, 25)],
+        minutes=[Choice(name=str(i), value=i) for i in range(0, 56, 5)],
+        seconds=[Choice(name=str(i), value=i) for i in range(5, 56, 5)],
+    )
+    @app_commands.checks.bot_has_permissions(send_messages=True)
+    async def reminder(
+        self,
+        interaction: discord.Interaction,
+        hours: int,
+        minutes: int,
+        seconds: int,
+        message: str,
+    ) -> None:
+        """Reminds you of something."""
+        remind_in = round(
+            datetime.timestamp(
+                datetime.now()
+                + timedelta(hours=hours, minutes=minutes, seconds=seconds)
+            )
+        )
+        await interaction.response.send_message(
+            f"Your message will be sent <t:{remind_in}:R>."
+        )
+
+        await asyncio.sleep(seconds + minutes * 60 + hours * (60 ** 2))
+        await interaction.channel.send(
+            f":bell: <@{interaction.user.id}> Reminder (<t:{remind_in}:R>): {message}"
+        )

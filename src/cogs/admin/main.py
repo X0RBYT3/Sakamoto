@@ -4,25 +4,26 @@ import asyncio
 from discord.ext import commands
 import discord
 
+from core.cogmanager import cogs_manager
 from cogs.admin.gitpull import check_for_push, pull_and_reload
 
 
-def setup(client):
-    client.add_cog(AdminCog(client))
+async def setup(client):
+    await client.add_cog(Admin(client))
 
 
 def mod_check(ctx: commands.Context) -> bool:
     """
     We can assume anyone with manage_messages is a mod.
 
-    # TODO: Change this for when bot goes public
+    # TODO: Change this for when client goes public
     """
     if ctx.author.guild_permissions.manage_messages:
         return True
     return False
 
 
-class AdminCog(commands.Cog):
+class Admin(commands.Cog):
     """
     Handles Cog Control / Shutting Down / Git Pulling
 
@@ -35,7 +36,8 @@ class AdminCog(commands.Cog):
     @commands.command(
         name="shutdown", help="Shuts down Sakamoto. Used only for emergencies"
     )
-    @commands.check(mod_check)
+    @commands.bot_has_permissions(send_messages=True)
+    @commands.is_owner()
     async def _shutdown(self, ctx: commands.Context):
         """
         Emergency usage only.
@@ -44,60 +46,56 @@ class AdminCog(commands.Cog):
         await self.client.close()
 
     @commands.command(name="load")
-    @commands.check(mod_check)
+    @commands.bot_has_permissions(send_messages=True)
+    @commands.is_owner()
     async def _load(self, ctx, *, cog: str):
         """Command which loads a Module.
-        eg: !reload admin"""
-        try:
-            if cog.lower() == "last":
-                if self.last_cog != "":
-                    cog = self.last_cog
-                else:
-                    await ctx.send(f"**`ERROR:`** No Last Cog")
-            self.client.load_extension(f"cogs.{cog}.main")
-        except Exception as e:
-            await ctx.send(f"**`ERROR:`** {type(e).__name__} - {e}")
-        else:
-            await ctx.send("**`SUCCESS`**\N{PISTOL}")
+        eg: !load admin"""
+        if cog.lower() == "last" or cog == "~":
+            if self.last_cog != "":
+                cog = self.last_cog
+            else:
+                await ctx.send(f"**`ERROR:`** No Last Cog")
+        r = await cogs_manager(self.client, "load", [cog])
+        await ctx.send(r)
         self.last_cog = cog
 
     @commands.command(name="unload")
-    @commands.check(mod_check)
+    @commands.bot_has_permissions(send_messages=True)
+    @commands.is_owner()
     async def _unload(self, ctx, *, cog: str):
         """Command which Unloads a Module.
         Remember to use dot path. e.g: cogs.owner"""
-        try:
-            self.client.unload_extension(f"cogs.{cog}.main")
-        except Exception as e:
-            await ctx.send(f"**`ERROR:`** {type(e).__name__} - {e}")
-        else:
-            await ctx.send("**`SUCCESS`**\N{PISTOL}")
-            # this is inside the try:except loop
-            # because 9/10 the cog will unload fine
-            self.last_cog = cog
-
-    @commands.command(name="reload")
-    @commands.check(mod_check)
-    async def _reload(self, ctx, *, cog: str):
-        """Command which Reloads a Module.
-        Remember to use dot path. e.g: cogs.owner"""
-        try:
-            if cog.lower() == "last":
-                if self.last_cog != "":
-                    cog = self.last_cog
-                else:
-                    await ctx.send(f"**`ERROR:`** No Last Cog")
-            self.client.unload_extension(f"cogs.{cog}.main")
-            self.client.load_extension(f"cogs.{cog}.main")
-        except Exception as e:
-            await ctx.send(f"**`ERROR:`** {type(e).__name__} - {e}")
-        else:
-            await ctx.send("**`SUCCESS`**\N{PISTOL}")
+        r = await cogs_manager(self.client, "unload", [cog])
+        await ctx.send(r)
         self.last_cog = cog
 
-    @commands.command(name="test")
-    async def _test(self, ctx):
-        await pull_and_reload(self.client)
+    @commands.command(name="reload")
+    @commands.bot_has_permissions(send_messages=True)
+    @commands.is_owner()
+    async def _reload_cog(self, ctx: commands.Context, cog: str):
+        """Unload a cog."""
+        if cog.lower() == "last" or cog == "~":
+            if self.last_cog != "":
+                cog = self.last_cog
+            else:
+                await ctx.send(f"**`ERROR:`** No Last Cog")
+        r = await cogs_manager(self.client, "reload", [cog])
+        await ctx.send(r)
+        self.last_cog = cog
+
+    @commands.command(name="synctree", aliases=["st"])
+    @commands.bot_has_permissions(send_messages=True)
+    @commands.is_owner()
+    async def _reload_tree(self, ctx: commands.Context, guild_id: str = None):
+        """Sync application commands."""
+        if guild_id:
+            if guild_id == "guild" or guild_id == "~":
+                guild_id = ctx.guild.id
+            sync_tree = await self.client.tree.sync(guild=discord.Object(id=guild_id))
+        else:
+            sync_tree = await self.client.tree.sync()
+        await ctx.send(f":pinched_fingers: `{len(sync_tree)}` synced!")
 
     @commands.Cog.listener()
     async def on_message(self, msg: discord.Message):
