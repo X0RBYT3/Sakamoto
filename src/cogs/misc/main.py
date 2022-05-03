@@ -10,8 +10,8 @@ from core.utils.chat_formatter import escape
 from cogs.misc.about import AboutView, get_client_uptime, gen_about_embed
 
 
-def setup(client):
-    client.add_cog(Misc(client))
+async def setup(client):
+    await client.add_cog(Misc(client))
 
 
 class Misc(commands.Cog):

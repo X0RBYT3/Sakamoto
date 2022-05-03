@@ -7,8 +7,8 @@ import discord
 from cogs.admin.gitpull import check_for_push, pull_and_reload
 
 
-def setup(client):
-    client.add_cog(Admin(client))
+async def setup(client):
+    await client.add_cog(Admin(client))
 
 
 def mod_check(ctx: commands.Context) -> bool:
@@ -95,9 +95,18 @@ class Admin(commands.Cog):
             await ctx.send("**`SUCCESS`**\N{PISTOL}")
         self.last_cog = cog
 
-    @commands.command(name="test")
-    async def _test(self, ctx):
-        await pull_and_reload(self.client)
+    @commands.command(name="synctree", aliases=["st"])
+    @commands.bot_has_permissions(send_messages=True)
+    @commands.is_owner()
+    async def reload_tree(self, ctx: commands.Context, guild_id: str = None):
+        """Sync application commands."""
+        if guild_id:
+            if guild_id == "guild" or guild_id == "~":
+                guild_id = ctx.guild.id
+            sync_tree = await self.client.tree.sync(guild=discord.Object(id=guild_id))
+        else:
+            sync_tree = await self.client.tree.sync()
+        await ctx.send(f":pinched_fingers: `{len(sync_tree)}` synced!")
 
     @commands.Cog.listener()
     async def on_message(self, msg: discord.Message):
