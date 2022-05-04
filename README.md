@@ -38,13 +38,14 @@ Requires the **Latest** version of [discord.py](https://github.com/Rapptz/discor
 **Install Requirements:**
 ``` sh
 $ git clone https://github.com/Nekurone/Sakamoto.git
+$ cd src
 $ pip3 install -r requirements.txt
 ```
 This _should_ install all requirements.  
 Next, we need our Bot's token. [See here for how to get your Bot Token](https://discordpy.readthedocs.io/en/stable/discord.html)
 We will place this within secrets.env which sits in `src/core`. (alternatively, use your favourite text editor to do this step)
 ``` sh
-$ cd src
+# remember to cd into src if not already there
 $ nano core/secrets.env
 # Remember, Nano is Ctrl+O to save and Ctrl+X to quit
 ```
