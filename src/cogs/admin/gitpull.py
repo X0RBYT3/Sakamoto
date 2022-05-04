@@ -26,11 +26,5 @@ async def pull_and_reload(client: discord.Client):
     current = repo.head.commit
     repo.remotes.origin.pull()
     print("Pulling")
-    for cog in client.cogs:
-        try:
-            client.unload_extension(f"cogs.{cog.lower()}.main")
-            client.load_extension(f"cogs.{cog.lower()}.main")
-        except Exception as e:
-            print(f"Error with {cog}: {type(e).__name__} - {e}")
-        else:
-            print(f"Successfully reload {cog}")
+    r = await cogs_manager(self.client, "reload", client.cogs)
+    print("Reload complete.")

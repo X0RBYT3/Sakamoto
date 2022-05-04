@@ -42,7 +42,7 @@ class Admin(commands.Cog):
         """
         Emergency usage only.
         """
-        await ctx.send("Shutting down, I love you.")
+        await ctx.send("Shutting down.")
         await self.client.close()
 
     @commands.command(name="load")
