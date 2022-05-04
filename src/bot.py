@@ -3,7 +3,7 @@ from datetime import datetime
 import discord
 from discord.ext import commands
 
-from core.config import PREFIX
+from core.config import PREFIX, VERSION
 from core.cogmanager import cogs_manager
 
 """
@@ -32,7 +32,7 @@ class sakaClient(commands.Bot):
         self.help_command = MyHelpCommand()
         self.secrets = secrets
         self.uptime = datetime.now()
-        self._version = "0.0.1"  # Make this Magic
+        self._version = VERSION
         self._cogs = cogs
 
     async def on_ready(self):
