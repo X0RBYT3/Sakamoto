@@ -27,5 +27,5 @@ async def pull_and_reload(client: discord.Client):
     current = repo.head.commit
     repo.remotes.origin.pull()
     print("Pulling")
-    r = await cogs_manager(self.client, "reload", client.cogs)
+    r = await cogs_manager(client, "reload", client.cogs)
     print("Reload complete.")
