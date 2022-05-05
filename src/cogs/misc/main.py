@@ -3,7 +3,7 @@ import time
 import re
 import asyncio
 from random import randint, choice
-
+import typing
 import requests
 
 import discord
@@ -19,7 +19,7 @@ async def setup(client):
 
 
 class Misc(commands.Cog):
-    def __init_(self, client):
+    def __init__(self, client):
         self.client = client
 
     @commands.hybrid_command(name="poll", aliases=["ynpoll", "pollstart"])
