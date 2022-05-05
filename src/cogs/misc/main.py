@@ -23,7 +23,12 @@ class Misc(commands.Cog):
         self.client = client
 
     @commands.hybrid_command(name="poll", aliases=["ynpoll", "pollstart"])
-    async def _ynpoll(self, ctx: commands.Context, *, question: str):
+    @app_commands.choices(
+        time=[Choice(name=str(i), value=i) for i in range(10, 120, 10)]
+    )
+    async def _ynpoll(
+        self, ctx: commands.Context, time: typing.Optional[int] = 30, *, question: str
+    ):
         """
         Asks question & then adds checkmark & "x" as reactions.
         Thanks to Spoon for original idea
@@ -32,16 +37,20 @@ class Misc(commands.Cog):
         after 30 secs announce result
 
         """
-
+        if time > 120 and not await self.client.is_owner(ctx.author):
+            await ctx.send(
+                "ERROR: Only the Owner can set the time to more than 2 minutes",
+                delete_after=5,
+            )
         ynpoll_embed = discord.Embed(
-            title=f"Poll by {ctx.author}. Ends in 30 seconds.",
+            title=f"Poll by {ctx.author}. Ends in {time} seconds.",
             description=f"**Question**: {question}",
             timestamp=ctx.message.created_at,
             color=discord.Color.blurple(),
         )
         poll = PollView()
         message = await ctx.send(embed=ynpoll_embed, view=poll)
-        await asyncio.sleep(30)
+        await asyncio.sleep(time)
 
         ynpoll_embed.title = f"Poll by {ctx.author}. Poll Ended"
         # Send forth the greyed out bits.

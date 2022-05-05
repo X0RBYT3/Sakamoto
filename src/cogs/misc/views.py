@@ -9,8 +9,8 @@ class PollView(discord.ui.View):
         self.users_yes = []
         self.users_no = []
 
-    # I hate all of this.
-    # Once discord.py has delete_after for interactions, we can implement that.
+    # Unsure on whether disabling the view or straight deleting it is better.
+    # Went with disabling for now.
     @discord.ui.button(label="Yes.", style=discord.ButtonStyle.green)
     async def yes_button(
         self, interaction: discord.Interaction, button: discord.ui.Button
