@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import dateutil.parser
 import time
 import re
 import asyncio
@@ -100,7 +101,7 @@ class Misc(commands.Cog):
         message = await ctx.send(":ping_pong: Pong !")
         ping = (time.monotonic() - before) * 1000
         await message.edit(
-            content=f":ping_pong: Pong ! in `{float(round(ping/1000.0,3))}s` ||{int(ping)}ms||"
+            content=f":ping_pong: Pong ! in `{float(round(ping / 1000.0, 3))}s` ||{int(ping)}ms||"
         )
 
     @commands.hybrid_command(name="uptime", usage="!uptime")
@@ -131,25 +132,34 @@ class Misc(commands.Cog):
         await ctx.send(embed=em)
 
     @commands.hybrid_command(name="poll", aliases=["ynpoll", "pollstart"])
-    async def _ynpoll(self, ctx: commands.Context, *, question: str):
+    async def _ynpoll(self, ctx: commands.Context, *, args: str):
         """
         Asks question & then adds checkmark & "x" as reactions.
         Thanks to Spoon for original idea
 
         Make embed -> Add buttons, when buttons are clicked, add them to list and grey out
-        after 30 secs announce result
+        after some user defined time in secs announce result
 
         """
-
+        to_wait = 30
+        question = args
+        if args.startswith("-t "):
+            try:
+                s = args.split(" ")[1]
+                to_wait = int(s)    # behaviour note, passing as the only arg `-t 100` will have that be both the time
+                question = " ".join(args.split(" ")[2:])  # and the question
+            except ValueError or IndexError:
+                pass
+        to_wait = max(1, min(to_wait, 3600))
         ynpoll_embed = discord.Embed(
-            title=f"Poll by {ctx.author}. Expires in 20 seconds.",
+            title=f"Poll by {ctx.author}. Expires in {to_wait} seconds.",
             description=f"**Question**: {question}",
             timestamp=ctx.message.created_at,
             color=discord.Color.blurple(),
         )
         poll = PollView()
         message = await ctx.send(embed=ynpoll_embed, view=poll)
-        await asyncio.sleep(10)
+        await asyncio.sleep(to_wait)
         ynpoll_embed.title = f"Poll by {ctx.author}. Poll Ended"
         # Send forth the greyed out bits.
         await message.edit(embed=ynpoll_embed, view=ExpiredPoll())
@@ -276,12 +286,12 @@ class Misc(commands.Cog):
     )
     @app_commands.checks.bot_has_permissions(send_messages=True)
     async def reminder(
-        self,
-        interaction: discord.Interaction,
-        hours: int,
-        minutes: int,
-        seconds: int,
-        message: str,
+            self,
+            interaction: discord.Interaction,
+            hours: int,
+            minutes: int,
+            seconds: int,
+            message: str,
     ) -> None:
         """Reminds you of something."""
         remind_in = round(
