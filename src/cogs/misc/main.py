@@ -97,31 +97,31 @@ class Misc(commands.Cog):
         """
         choices = [escape(c, mass_mentions=True) for c in choices if c]
         if len(choices) < 2:
-            await ctx.send(_("Not enough options to pick from."))
+            await ctx.send("Not enough options to pick from.")
         else:
-            await ctx.send("I ch{0}se: ".format("o" * randint(2, 5)) + choice(choices))
+            await ctx.send(f"I ch{randint(1,6)*'s'}se: {choice(choices)}")
 
     @commands.command()
     async def flip(self, ctx, user: discord.Member = None):
         # TODO: Make into Interaction
         """Flip a coin... or a user.
         Defaults to a coin.
+        Needs rewriting
         """
-        _ = lambda a: a
         if user is not None:
             msg = ""
             if user.id == ctx.bot.user.id:
                 user = ctx.author
-                msg = _(
+                msg = (
                     "Nice try. You think this is funny?\n How about *this* instead:\n\n"
                 )
             if user.id == 242398251855249428:  # Me
                 user = ctx.author
-                msg = _("Haha that's cute. \n\n")
+                msg = "Haha that's cute. \n\n"
             elif user.id == 277272009824665600:  ## Milk
-                msg = _("Hey! Don't touch Milk!\nThat's *my* job 😎.")
+                msg = "Hey! Don't touch Milk!\nThat's *my* job 😎."
             elif user.id == 280780450610544650:  # Antoine
-                msg = _("Yeah, she deserves this.\n")
+                msg = "Yeah, she deserves this.\n"
             # Lower case
             char = "abcdefghijklmnopqrstuvwxyz"
             tran = "ɐqɔpǝɟƃɥᴉɾʞlɯuodbɹsʇnʌʍxʎz"
@@ -153,7 +153,7 @@ class Misc(commands.Cog):
             await ctx.send(msg + "(╯°□°）╯︵ " + name[::-1])
         else:
             await ctx.send(
-                _("*flips a coin and... ") + choice([_("HEADS!*"), _("TAILS!*")])
+                ("*flips a coin and... ") + choice([("HEADS!*"), ("TAILS!*")])
             )
 
     @app_commands.command(name="reminder", description="Reminds you of something.")
