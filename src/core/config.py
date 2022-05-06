@@ -31,5 +31,5 @@ def set_logging(level=logging.WARNING, filename: str = "discord.log") -> None:
     logger.addHandler(handler)
 
 
-VERSION = "0.9.0"
+VERSION = "1.0.0"
 PREFIX = "!"
