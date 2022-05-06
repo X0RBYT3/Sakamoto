@@ -1,6 +1,7 @@
 import discord
 from datetime import datetime
 import platform
+from discord.ext import commands
 
 # Ew american spelling
 from core.utils.chat_formatter import humanize_timedelta
@@ -60,7 +61,7 @@ def gen_about_embed(client: discord.Client) -> discord.Embed:
     return embed
 
 
-class Github(discord.ui.View):
+class GithubView(discord.ui.View):
     # Very very basic, could have a modal in future for adding issues??
     def __init__(self):
         super().__init__()

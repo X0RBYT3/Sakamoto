@@ -2,6 +2,8 @@ import discord
 from discord.ext import commands
 from cogs.info.views import get_client_uptime, gen_about_embed, AboutView, GithubView
 import requests
+import time
+from datetime import datetime
 
 
 async def setup(client):
