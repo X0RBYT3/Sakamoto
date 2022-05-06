@@ -18,4 +18,4 @@ async def cogs_manager(client: discord.Client, mode: str, cogs: list[str]) -> No
             exc = f"{type(e).__name__}: {e}"
             return f"**`ERROR:`** Cog Loading Failed: {cog}\n{exc}"
         else:
-            return f"**`SUCCESS`** - {cog} {mode}ed! \N{PISTOL}"
+            print(f"**`SUCCESS`** - {cog} {mode}ed! \N{PISTOL}")
