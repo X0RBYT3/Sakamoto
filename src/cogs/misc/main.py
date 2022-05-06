@@ -19,6 +19,10 @@ async def setup(client):
 
 
 class Misc(commands.Cog):
+    """
+    Here  be cursed shit
+    """
+
     def __init__(self, client):
         self.client = client
 
@@ -115,7 +119,7 @@ class Misc(commands.Cog):
         else:
             await ctx.send(f"I ch{randint(1,6)*'s'}se: {choice(choices)}")
 
-    @commands.command()
+    @commands.command(usage="flip <user>")
     async def flip(self, ctx, user: discord.Member = None):
         # TODO: Make into Interaction
         """Flip a coin... or a user.

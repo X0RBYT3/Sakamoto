@@ -13,23 +13,12 @@ TODO: Logging
 """
 
 
-class MyHelpCommand(commands.MinimalHelpCommand):
-    """Help Command courtesy of Flobot"""
-
-    async def send_pages(self):
-        destination = self.get_destination()
-        e = discord.Embed(color=discord.Color.blurple(), description="")
-        for page in self.paginator.pages:
-            e.description += page
-        await destination.send(embed=e)
-
-
 class sakaClient(commands.Bot):
     def __init__(self, cogs: list, secrets: dict):
         super().__init__(
             command_prefix=PREFIX, case_insensitive=True, intents=discord.Intents.all()
         )
-        self.help_command = MyHelpCommand()
+        self.help_command = None
         self.secrets = secrets
         self.uptime = datetime.now()
         self._version = VERSION
