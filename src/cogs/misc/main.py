@@ -23,6 +23,7 @@ class Misc(commands.Cog):
         self.client = client
 
     @commands.hybrid_command(name="poll", aliases=["ynpoll", "pollstart"])
+    @commands.cooldown(1, 30, commands.BucketType.user)
     @app_commands.choices(
         time=[Choice(name=str(i), value=i) for i in range(10, 120, 10)]
     )
@@ -42,6 +43,10 @@ class Misc(commands.Cog):
                 "ERROR: Only the Owner can set the time to more than 2 minutes",
                 delete_after=5,
             )
+            return
+        if time < 5:
+            await ctx.send("Bit short don't you think? 🤏")
+            return
         ynpoll_embed = discord.Embed(
             title=f"Poll by {ctx.author}. Ends in {time} seconds.",
             description=f"**Question**: {question}",
@@ -78,7 +83,7 @@ class Misc(commands.Cog):
             result = "Draw"
             result_em.color = discord.Color.yellow()
         # Emoji time?
-        result_em.title = f"And the result is: **{result}**"
+        result_em.title = f"{ctx.author} asked '{question}' {randint(4,9)*'a'}nd the result is: **{result}**"
         result_em.description = f"{yes_l + no_l} Voted and they voted: {result}"
 
         # There's defo an easier way to write this in like 2 lines.
@@ -94,7 +99,7 @@ class Misc(commands.Cog):
         # Emojis in the fields?
         result_em.add_field(name="People who voted Yes", value=yes_s, inline=True)
         result_em.add_field(name="People who voted No", value=no_s, inline=True)
-        await ctx.send(embed=result_em)
+        await message.reply(embed=result_em)
 
     @commands.command(usage="<first> <second> [others...]")
     async def choose(self, ctx, *choices) -> None:
