@@ -7,7 +7,7 @@ import logging
 """
 Main File, run this to run the bot
 """
-# TODO: Logging, Runtime parameters
+# TODO: Runtime parameters
 
 COGS = ["admin", "misc", "info"]
 

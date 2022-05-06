@@ -1,9 +1,11 @@
-import discord
-from discord.ext import commands
-from cogs.info.views import get_client_uptime, gen_about_embed, AboutView, GithubView
 import requests
 import time
 from datetime import datetime
+
+import discord
+from discord.ext import commands
+
+from cogs.info.views import get_client_uptime, gen_about_embed, AboutView, GithubView
 
 
 async def setup(client):
@@ -13,11 +15,6 @@ async def setup(client):
 class Info(commands.Cog):
     """
     Provides some neat stats on the Bot.
-
-    PING: Measures ping
-    UPTIME: Measures uptime
-    ABOUT: Gives nice data on memory usage and the such.
-
     """
 
     def __init__(self, client):
@@ -71,7 +68,7 @@ class Info(commands.Cog):
         )
 
     @commands.hybrid_command(name="uptime", usage="!uptime")
-    @commands.cooldown(1, 5, commands.BucketType.user)
+    @commands.cooldown(1, 30, commands.BucketType.user)
     @commands.bot_has_permissions(send_messages=True)
     async def _uptime(self, ctx: commands.Context):
         """
