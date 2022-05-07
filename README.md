@@ -71,5 +71,5 @@ To edit the prefix, go into `core/config.py` and edit `PREFIX = "!"`
 |Stats | ✅ |
 |Help | ❌ |
 |Settings|❌|
-
+|Games |🟡|
 <h2 align="center">Keep an eye on this space for updates!</h2>
