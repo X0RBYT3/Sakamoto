@@ -12,17 +12,6 @@ async def setup(client):
     await client.add_cog(Admin(client))
 
 
-def mod_check(ctx: commands.Context) -> bool:
-    """
-    We can assume anyone with manage_messages is a mod.
-
-    # TODO: Change this for when client goes public
-    """
-    if ctx.author.guild_permissions.manage_messages:
-        return True
-    return False
-
-
 class Admin(commands.Cog):
     """
     Handles Cog Control / Shutting Down / Git Pulling
