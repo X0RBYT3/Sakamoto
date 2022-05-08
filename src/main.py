@@ -21,8 +21,8 @@ def main():
     set_logging(level=logging.WARNING, filename="discord.log")
     secrets = get_secrets()
     client = sakaClient(COGS, secrets)
-    print(f"Booting Sakamoto with {len(COGS)} Cogs")
     client.run(secrets["TOKEN"])
 
 
-main()
+if __name__ == "__main__":
+    main()
