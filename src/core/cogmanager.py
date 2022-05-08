@@ -6,7 +6,7 @@ import discord
 async def cogs_manager(client: discord.Client, mode: str, cogs: list[str]) -> None:
     for cog in cogs:
         try:
-            cog_path = f"cogs.{cog}.main"
+            cog_path = f"cogs.{cog.lower()}.main"
             if mode == "unload":
                 await client.unload_extension(cog_path)
             elif mode == "load":
