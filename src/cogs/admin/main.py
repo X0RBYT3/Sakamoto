@@ -1,8 +1,10 @@
 import subprocess
+from pathlib import Path
 
 import asyncio
 from discord.ext import commands
 import discord
+import aiohttp
 
 from core.cogmanager import cogs_manager
 from cogs.admin.gitpull import check_for_push, pull_and_reload
@@ -21,6 +23,24 @@ class Admin(commands.Cog):
     def __init__(self, client: discord.Client):
         self.client = client
         self.last_cog = ""
+
+    @commands.command(name="eb", help="Backs up emojis to local storage")
+    @commands.is_owner()
+    async def emojiback(self, ctx: commands.Context):
+        """
+        This is NOT for every day use, it's something I use for my personal server
+        And figured it may be handy for someone who stumbles upon this code
+        Use with caution homie
+        """
+        backup = Path("backup/emojis")
+        async with aiohttp.ClientSession() as session:
+            for e in ctx.guild.emojis:
+                url = e.url
+                name = url[url.rfind("/") + 1 :]
+                async with session.get(url) as resp:
+                    if resp.status == 200:
+                        with open(backup / name, "wb+") as file:
+                            file.write(await resp.read())
 
     @commands.command(
         name="shutdown", help="Shuts down Sakamoto. Used only for emergencies"
