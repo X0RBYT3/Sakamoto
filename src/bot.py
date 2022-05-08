@@ -3,7 +3,7 @@ from datetime import datetime
 import discord
 from discord.ext import commands
 
-from core.config import PREFIX, VERSION
+from core.config import VERSION
 from core.cogmanager import cogs_manager
 
 """
@@ -17,8 +17,8 @@ intents.presences = False
 
 
 class sakaClient(commands.Bot):
-    def __init__(self, cogs: list, secrets: dict):
-        super().__init__(command_prefix=PREFIX, case_insensitive=True, intents=intents)
+    def __init__(self, cogs: list, secrets: dict, prefix: str):
+        super().__init__(command_prefix=prefix, case_insensitive=True, intents=intents)
         self.secrets = secrets
         self.uptime = datetime.now()
         self._version = VERSION
@@ -27,7 +27,7 @@ class sakaClient(commands.Bot):
     async def on_ready(self):
         # This could probably be prettied up with some f string formatting
         print(
-            f"Username: {self.user} | {discord.__version__=}\nGuilds: {len(self.guilds)} | Users: {len(self.users)}"
+            f"Username: {self.user} | {discord.__version__=}\nGuilds: {len(self.guilds)} | Users: {len(self.users)}|Prefix: {self.command_prefix}"
         )
         # What an invite link holy
         # Authorises both the bot AND the slash commands
