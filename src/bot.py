@@ -14,6 +14,7 @@ bot 'globals' go into Client.__init__() if they need to be used across commands.
 intents = discord.Intents.default()
 intents.typing = False
 intents.presences = False
+intents.message_content = True
 
 
 class sakaClient(commands.Bot):
