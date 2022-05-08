@@ -18,7 +18,6 @@ class sakaClient(commands.Bot):
         super().__init__(
             command_prefix=PREFIX, case_insensitive=True, intents=discord.Intents.all()
         )
-        self.help_command = None
         self.secrets = secrets
         self.uptime = datetime.now()
         self._version = VERSION
