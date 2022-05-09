@@ -1,8 +1,7 @@
-from os.path import exists
 import sys
 import logging
 import argparse, textwrap
-
+from pathlib import Path
 from bot import sakaClient
 from core.config import get_secrets, set_logging, VERSION, PREFIX
 
@@ -43,13 +42,15 @@ parser.add_argument(
 )
 parser.add_argument("-h", "--help", action="help", default=argparse.SUPPRESS)
 
+SECRETS_PATH = Path('core/secrets.env')
 
 def main():
-    if not exists("core/secrets.env"):
+    if not SECRETS_PATH.exists():
         print(
             "Error: Have you placed the discord token inside a secrets.env file in /core ?"
         )
         return
+    
     parser.print_help()
     args = parser.parse_args()
     v = vars(args)
