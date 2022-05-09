@@ -1,11 +1,16 @@
-import discord
 from datetime import datetime
-
+from random import choice
 import platform
+from distutils.util import strtobool  # I fucking love this command
+from typing import Optional
+import discord
 from discord.ext import commands
 
+import traceback
 # Ew american spelling
 from core.utils.chat_formatter import humanize_timedelta
+
+joke_suggestions = ["Get more cat litter", "Treat Sakamoto better!", "*jazz hands*"]
 
 
 def get_client_uptime(uptime, brief=False):
@@ -50,6 +55,49 @@ def gen_about_embed(client: discord.Client) -> discord.Embed:
     return embed
 
 
+
+class SuggestionModal(discord.ui.Modal, title="Sakamoto Suggestion"):
+
+    suggestion = discord.ui.TextInput(
+        label="Suggestion:",
+        style=discord.TextStyle.long,
+        placeholder=f"Suggestion: {choice(joke_suggestions)}.",
+        required=True,
+        max_length=200,
+    )
+    consent = discord.ui.TextInput(
+        label="Do you consent to being contacted? (Y/N)",
+        style=discord.TextStyle.short,
+        placeholder="Yes/No",
+        required=True,
+        max_length=5
+    )
+
+
+    async def on_submit(self, interaction: discord.Interaction) -> None:
+        """
+        This would be a FANTASTIC use of either
+        - a simple Flask POST server
+        - Google sheets
+        Alternatively, could use Git and use it on a private repo
+        """
+        time_str = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+        suggest_str = f"{time_str} -- {self.suggestion.value}"
+        if strtobool(self.consent.value):
+            suggest_str = f"{interaction.user} -- {suggest_str}"
+        with open("suggestions.txt", "a+") as sug:
+            sug.write("\n")
+            sug.write(suggest_str)
+        await interaction.response.send_message(
+            f"Thanks for suggesting: {self.suggestion.value}",
+            ephemeral=True
+        )
+    async def on_error(self, interaction: discord.Interaction, error: Exception) -> None:
+        await interaction.response.send_message('Oops! Something went wrong.', ephemeral=True)
+
+        # Make sure we know what the error actually is
+        traceback.print_tb(error.__traceback__)
+
 class GithubView(discord.ui.View):
     # Very very basic, could have a modal in future for adding issues??
     def __init__(self):
@@ -77,10 +125,6 @@ class AboutView(discord.ui.View):
                 label="🤖 Check out my Code!", url="https://github.com/Nekurone/Sakamoto"
             )
         )
-        self.add_item(
-            discord.ui.Button(
-                disabled=True,
-                label="📄 Check out my site! (WIP)",
-                url="https://www.google.com",
-            )
-        )
+    @discord.ui.button(label="Suggest a Feature", style=discord.ButtonStyle.success,emoji="📄")
+    async def sugg_button(self, interaction: discord.Integration, button: discord.ui.Button):
+        await interaction.response.send_modal(SuggestionModal())
