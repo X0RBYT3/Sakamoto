@@ -21,9 +21,19 @@ def get_secrets():
         return secrets
 
 
-def set_logging(level=logging.WARNING, filename: str = "discord.log") -> None:
+def set_logging(level: str, filename: str = "discord.log") -> None:
     logger = logging.getLogger("discord")
-    logger.setLevel(level)
+    try:
+        logger.setLevel(level)
+    except ValueError:
+        try:
+            level = int(level)
+            logger.setLevel(level)
+        except Exception as e:
+            logger.setLevel(logging.WARNING)
+            print(f"EXCEPTION: {e}\n Going to Default")
+    print(f"Logging set to {logging.getLevelName(logger.level)}")  # Least bougie setup
+
     handler = logging.FileHandler(filename=filename, encoding="utf-8", mode="w")
     handler.setFormatter(
         logging.Formatter("%(asctime)s:%(levelname)s:%(name)s: %(message)s")
@@ -31,5 +41,5 @@ def set_logging(level=logging.WARNING, filename: str = "discord.log") -> None:
     logger.addHandler(handler)
 
 
-VERSION = "1.0.0"
+VERSION = "1.0.1"
 PREFIX = "!"
