@@ -16,6 +16,7 @@ async def cogs_manager(client: discord.Client, mode: str, cogs: list[str]) -> No
                 await client.reload_extension(cog_path)
             else:
                 raise ValueError("Invalid mode.")
+            return f"**`SUCCESS`** - {cog} {mode}ed! \N{PISTOL}"
         except Exception as e:
             exc = f"{type(e).__name__}: {e}"
             exc_type, exc_obj, exc_tb = sys.exc_info()
@@ -24,4 +25,4 @@ async def cogs_manager(client: discord.Client, mode: str, cogs: list[str]) -> No
             print(f"**`ERROR:`** Cog Loading Failed: {cog}\n{exc}")
         else:
             print(f"**`SUCCESS`** - {cog} {mode}ed! \N{PISTOL}")
-    return f"**`SUCCESS`** - {cog} {mode}ed! \N{PISTOL}"  # Since we only need this for sending to discord
+        # Since we only need this for sending to discord
