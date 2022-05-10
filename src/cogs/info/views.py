@@ -129,7 +129,7 @@ class GithubView(discord.ui.View):
 
 
 class AboutView(discord.ui.View):
-    def __init__(self, ctx: commands.Context):
+    def __init__(self):
         super().__init__()
         self.add_item(
             discord.ui.Button(
