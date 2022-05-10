@@ -7,6 +7,7 @@ import discord
 from discord.ext import commands
 
 import traceback
+
 # Ew american spelling
 from core.utils.chat_formatter import humanize_timedelta
 
@@ -37,7 +38,7 @@ def gen_about_embed(client: discord.Client) -> discord.Embed:
         color=0xC55050,  # Nice light red
     )
     embed.set_image(url="https://c.tenor.com/3qDw5i6bwGUAAAAM/dm4uz3-nichijou.gif")
-        # Wag gif
+    # Wag gif
     voice_channels = []
     text_channels = []
     for guild in client.guilds:
@@ -55,7 +56,6 @@ def gen_about_embed(client: discord.Client) -> discord.Embed:
     return embed
 
 
-
 class SuggestionModal(discord.ui.Modal, title="Sakamoto Suggestion"):
 
     suggestion = discord.ui.TextInput(
@@ -70,9 +70,8 @@ class SuggestionModal(discord.ui.Modal, title="Sakamoto Suggestion"):
         style=discord.TextStyle.short,
         placeholder="Yes/No",
         required=True,
-        max_length=5
+        max_length=5,
     )
-
 
     async def on_submit(self, interaction: discord.Interaction) -> None:
         """
@@ -89,14 +88,19 @@ class SuggestionModal(discord.ui.Modal, title="Sakamoto Suggestion"):
             sug.write("\n")
             sug.write(suggest_str)
         await interaction.response.send_message(
-            f"Thanks for suggesting: {self.suggestion.value}",
-            ephemeral=True
+            f"Thanks for suggesting: {self.suggestion.value}", ephemeral=True
         )
-    async def on_error(self, interaction: discord.Interaction, error: Exception) -> None:
-        await interaction.response.send_message('Oops! Something went wrong.', ephemeral=True)
+
+    async def on_error(
+        self, interaction: discord.Interaction, error: Exception
+    ) -> None:
+        await interaction.response.send_message(
+            "Oops! Something went wrong.", ephemeral=True
+        )
 
         # Make sure we know what the error actually is
         traceback.print_tb(error.__traceback__)
+
 
 class GithubView(discord.ui.View):
     # Very very basic, could have a modal in future for adding issues??
@@ -125,6 +129,11 @@ class AboutView(discord.ui.View):
                 label="🤖 Check out my Code!", url="https://github.com/Nekurone/Sakamoto"
             )
         )
-    @discord.ui.button(label="Suggest a Feature", style=discord.ButtonStyle.success,emoji="📄")
-    async def sugg_button(self, interaction: discord.Integration, button: discord.ui.Button):
+
+    @discord.ui.button(
+        label="Suggest a Feature", style=discord.ButtonStyle.success, emoji="📄"
+    )
+    async def sugg_button(
+        self, interaction: discord.Integration, button: discord.ui.Button
+    ):
         await interaction.response.send_modal(SuggestionModal())

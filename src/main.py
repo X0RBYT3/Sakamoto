@@ -42,7 +42,8 @@ parser.add_argument(
 )
 parser.add_argument("-h", "--help", action="help", default=argparse.SUPPRESS)
 
-SECRETS_PATH = Path('core/secrets.env')
+SECRETS_PATH = Path("core/secrets.env")
+
 
 def main():
     if not SECRETS_PATH.exists():
@@ -50,7 +51,7 @@ def main():
             "Error: Have you placed the discord token inside a secrets.env file in /core ?"
         )
         return
-    
+
     parser.print_help()
     args = parser.parse_args()
     v = vars(args)

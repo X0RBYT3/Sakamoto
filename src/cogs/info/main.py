@@ -4,8 +4,14 @@ from datetime import datetime
 
 import discord
 from discord.ext import commands
-
-from cogs.info.views import get_client_uptime, gen_about_embed, AboutView, GithubView
+from discord import app_commands
+from cogs.info.views import (
+    get_client_uptime,
+    gen_about_embed,
+    AboutView,
+    GithubView,
+    SuggestionModal,
+)
 
 
 async def setup(client):
@@ -30,7 +36,7 @@ class Info(commands.Cog):
         Gives you info about Sakamoto
         """
         e = gen_about_embed(self.client)
-        await ctx.send(embed=e, view=AboutView(ctx))
+        await ctx.send(embed=e, view=AboutView())
 
     @commands.hybrid_command(name="git", usage="!github", aliases=["source", "github"])
     @commands.cooldown(1, 5, commands.BucketType.user)
@@ -93,3 +99,8 @@ class Info(commands.Cog):
             icon_url="https://media.giphy.com/media/qjPD3Me0OCvFC/giphy.gif",
         )
         await ctx.send(embed=em)
+
+    @app_commands.command(name="suggest", description="Suggest a feature for Sakamoto")
+    @app_commands.checks.cooldown(1, 5.0, key=lambda i: (i.guild_id, i.user.id))
+    async def _suggest(self, interaction: discord.Interaction):
+        await interaction.response.send_modal(SuggestionModal())

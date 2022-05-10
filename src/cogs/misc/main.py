@@ -207,7 +207,7 @@ class Misc(commands.Cog):
             f"Your message will be sent <t:{remind_in}:R>."
         )
 
-        await asyncio.sleep(seconds + minutes * 60 + hours * (60 ** 2))
+        await asyncio.sleep(seconds + minutes * 60 + hours * (60**2))
         await interaction.channel.send(
             f":bell: <@{interaction.user.id}> Reminder (<t:{remind_in}:R>): {message}"
         )
