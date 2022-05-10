@@ -82,8 +82,15 @@ class SuggestionModal(discord.ui.Modal, title="Sakamoto Suggestion"):
         """
         time_str = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
         suggest_str = f"{time_str} -- {self.suggestion.value}"
-        if strtobool(self.consent.value):
-            suggest_str = f"{interaction.user} -- {suggest_str}"
+        # Need to add a ValueError catcher for this.
+        try:
+            if strtobool(self.consent.value):
+                suggest_str = f"{interaction.user} -- {suggest_str}"
+        except ValueError as e:  # User did NOT pass anything for strtobool to actually use
+            await interaction.response.send_message(
+                f"Unfortunately, I didn't recognise {self.consent.value}. :/",
+                ephemeral=True,
+            )
         with open("suggestions.txt", "a+") as sug:
             sug.write("\n")
             sug.write(suggest_str)
