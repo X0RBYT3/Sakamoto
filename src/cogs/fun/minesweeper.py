@@ -17,7 +17,6 @@ def generate_noise(width: int, height: int) -> list:
     noise = [[r for r in range(width)] for i in range(height)]
     for i in range(0, height):
         for j in range(0, width):
-
             noise[i][j] = random.choice([0, 0, 0, 0, 1])
             # Expert has a Mine to NonMine ratio of 1 mine every 4.85 cells, we use 1:4 sas an approx
     return noise
@@ -145,11 +144,11 @@ def gen_blanks(board: list) -> list:
 
 class MineSweeperGames:
     def __init__(
-        self,
-        game_type: str,
-        interaction: discord.Interaction,
-        height: int = 10,
-        width: int = 10,
+            self,
+            game_type: str,
+            interaction: discord.Interaction,
+            height: int = 10,
+            width: int = 10,
     ):
         self.board = None
         self.user_board = None
@@ -178,7 +177,7 @@ class MineSweeperGames:
             if (k // 26) > 1:  # If it's over 26
                 c += string.ascii_uppercase[
                     (k // 26) - 1
-                ]  # to be able to get 'A' we need to -1
+                    ]  # to be able to get 'A' we need to -1
             c += string.ascii_uppercase[k % 26]
             self.cols.append(c)
 
@@ -197,7 +196,7 @@ class MineSweeperGames:
         """
         msg = "```"
         msg += f"__| {' '.join(self.cols)}|\n"
-        msg += f"  |{'-'*((len(self.cols)*2))}|\n"
+        msg += f"  |{'-' * ((len(self.cols) * 2))}|\n"
         for i in range(len(self.user_board)):
             if self.rows[i] < 10:  # Double digits require more space
                 msg += " "
@@ -207,10 +206,12 @@ class MineSweeperGames:
                     msg += " @"  # Will only display once so idc about text limit
                 elif self.user_board[i][j] == "#":
                     msg += " #"
+                elif self.user_board[i][j] == "f":
+                    msg += " f"  # Flag ! maybe put a unicode emoji later or whatever
                 else:  # Must be a number
                     msg += f" {self.user_board[i][j]}"
             msg += "|\n"
-        msg += f"  |{'-'*((len(self.cols)*2))}|\n```"
+        msg += f"  |{'-' * ((len(self.cols) * 2))}|\n```"
         emb = discord.Embed(
             title=f"💣 Minesweeper! 💣 - {self.game_type} - {len(self.board)}x{len(self.board[0])}⭐",
             description=msg,
@@ -225,7 +226,7 @@ class MineSweeperGames:
         """Generates a completely uncovered board"""
         msg = "```"
         msg += f"__| {' '.join(self.cols)}|\n"
-        msg += f"  |{'-'*((len(self.cols)*2))}|\n"
+        msg += f"  |{'-' * ((len(self.cols) * 2))}|\n"
         for i in range(len(self.user_board)):
             if self.rows[i] < 10:  # Double digits require more space
                 msg += " "
@@ -236,7 +237,7 @@ class MineSweeperGames:
                 else:
                     msg += f" {self.board[i][j]}"
             msg += "|\n"
-        msg += f"  |{'-'*((len(self.cols)*2))}|\n```"
+        msg += f"  |{'-' * ((len(self.cols) * 2))}|\n```"
         return "YOU LOST!!!" + msg + "#####################"
 
     def search_cardinals(self, col: int, row: int) -> None:
@@ -251,16 +252,21 @@ class MineSweeperGames:
             if 0 <= col + c[0] < len(self.board) and 0 <= row + c[1] < len(self.board):
                 if self.board[col + c[0]][row + c[1]] == 0:
                     if self.user_board[col + c[0]][row + c[1]] != 0:
-
                         self.user_board[col + c[0]][row + c[1]] = self.board[
                             col + c[0]
-                        ][row + c[1]]
+                            ][row + c[1]]
                         self.search_cardinals(col + c[0], row + c[1])
 
                 self.user_board[col + c[0]][row + c[1]] = self.board[col + c[0]][
                     row + c[1]
-                ]
+                    ]
                 # self.user_board[col+c[0]][row+c[1]] = self.board[col+c[0]][row+c[1]]
+
+    def make_flag(self, col: int, row: int) -> None:
+        row -= 1
+        # It's indexed like that apparently
+        self.user_board[row][col] = 'f'  # Place flag !
+        # No win checks for now, they need to reveal all good squares
 
     def make_guess(self, col: int, row: int):
         col, row = row, col  # User
@@ -277,7 +283,7 @@ class MineSweeperGames:
         try:
             for i in range(len(self.board)):
                 for j in range(len(self.board)):
-                    if self.user_board[i][j] == "#" and self.board[i][j] != "m":
+                    if (self.user_board[i][j] == "#" or self.user_board[i][j] == "f") and self.board[i][j] != "m":
                         raise FloatingPointError  # This can be anything.
         except FloatingPointError:
             pass
