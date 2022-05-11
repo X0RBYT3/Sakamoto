@@ -18,7 +18,8 @@ Minesweeper is a game where mines are hidden in a grid of squares. Safe squares 
 
 Each game can be customised with `width` and `height` to your liking.
 
-Once you're in a game, use `/ms [column] [row]` to pick your cell to uncover, you win the game once you've opened every safe square without blowing up! 
+Once you're in a game, use `/ms [column] [row]` to pick your cell to uncover use `/ms [column] [row] True` to place a flag !
+You win the game once you've opened every safe square without blowing up! 
 
 Good luck! 💣"""
 
@@ -121,7 +122,13 @@ class Fun(commands.Cog):
         self.minesweeper_games[interaction.user.id] = c
 
     @app_commands.command(name="ms", description="Uncover a minesweeper tile")
-    async def ms(self, interaction: discord.Interaction, column: str, row: int):
+    async def ms(
+        self,
+        interaction: discord.Interaction,
+        column: str,
+        row: int,
+        is_flag: Optional[bool] = False,
+    ):
         if not interaction.user.id in self.minesweeper_games:
             return await interaction.response.send_message(
                 "You don't appear to have a minesweeper game Active, use //minesweeper to start one :)"
@@ -142,14 +149,32 @@ class Fun(commands.Cog):
             )
 
         col = self.minesweeper_games[interaction.user.id].cols.index(column.upper())
-        if self.minesweeper_games[interaction.user.id].user_board[row - 1][col] != "#":
+        if (
+            self.minesweeper_games[interaction.user.id].user_board[row - 1][col] != "#"
+            and self.minesweeper_games[interaction.user.id].user_board[row - 1][col]
+            != "f"
+        ):
             return await interaction.response.send_message(
                 "You've already uncovered this!", ephemeral=True
             )
 
-        # Finally checks are over
+        # NOTE !! This will NOT stop a user from "clicking" on a flag
+        if (
+            is_flag
+            and self.minesweeper_games[interaction.user.id].user_board[row - 1][col]
+            == "f"
+        ):
+            return await interaction.response.send_message(
+                "This is already a flag !", ephemeral=True
+            )
 
-        self.minesweeper_games[interaction.user.id].make_guess(col, row)
+        # Finally checks are over
+        if is_flag:
+            msg = self.minesweeper_games[interaction.user.id].make_flag(col, row)
+            if msg is not None:
+                await interaction.response.send_message(msg, ephemeral=True)
+        else:
+            self.minesweeper_games[interaction.user.id].make_guess(col, row)
         if not self.minesweeper_games[interaction.user.id].finished:
             msg = self.minesweeper_games[interaction.user.id].make_message()
             await interaction.response.send_message(
