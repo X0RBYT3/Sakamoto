@@ -144,11 +144,11 @@ def gen_blanks(board: list) -> list:
 
 class MineSweeperGames:
     def __init__(
-            self,
-            game_type: str,
-            interaction: discord.Interaction,
-            height: int = 10,
-            width: int = 10,
+        self,
+        game_type: str,
+        interaction: discord.Interaction,
+        height: int = 10,
+        width: int = 10,
     ):
         self.board = None
         self.user_board = None
@@ -177,7 +177,7 @@ class MineSweeperGames:
             if (k // 26) > 1:  # If it's over 26
                 c += string.ascii_uppercase[
                     (k // 26) - 1
-                    ]  # to be able to get 'A' we need to -1
+                ]  # to be able to get 'A' we need to -1
             c += string.ascii_uppercase[k % 26]
             self.cols.append(c)
 
@@ -254,18 +254,18 @@ class MineSweeperGames:
                     if self.user_board[col + c[0]][row + c[1]] != 0:
                         self.user_board[col + c[0]][row + c[1]] = self.board[
                             col + c[0]
-                            ][row + c[1]]
+                        ][row + c[1]]
                         self.search_cardinals(col + c[0], row + c[1])
 
                 self.user_board[col + c[0]][row + c[1]] = self.board[col + c[0]][
                     row + c[1]
-                    ]
+                ]
                 # self.user_board[col+c[0]][row+c[1]] = self.board[col+c[0]][row+c[1]]
 
     def make_flag(self, col: int, row: int) -> None:
         row -= 1
         # It's indexed like that apparently
-        self.user_board[row][col] = 'f'  # Place flag !
+        self.user_board[row][col] = "f"  # Place flag !
         # No win checks for now, they need to reveal all good squares
 
     def make_guess(self, col: int, row: int):
@@ -283,7 +283,9 @@ class MineSweeperGames:
         try:
             for i in range(len(self.board)):
                 for j in range(len(self.board)):
-                    if (self.user_board[i][j] == "#" or self.user_board[i][j] == "f") and self.board[i][j] != "m":
+                    if (
+                        self.user_board[i][j] == "#" or self.user_board[i][j] == "f"
+                    ) and self.board[i][j] != "m":
                         raise FloatingPointError  # This can be anything.
         except FloatingPointError:
             pass

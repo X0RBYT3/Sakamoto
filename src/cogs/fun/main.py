@@ -124,7 +124,13 @@ class Fun(commands.Cog):
         self.minesweeper_games[interaction.user.id] = c
 
     @app_commands.command(name="ms", description="Uncover a minesweeper tile")
-    async def ms(self, interaction: discord.Interaction, column: str, row: int, is_flag: Optional[bool] = False):
+    async def ms(
+        self,
+        interaction: discord.Interaction,
+        column: str,
+        row: int,
+        is_flag: Optional[bool] = False,
+    ):
         if not interaction.user.id in self.minesweeper_games:
             return await interaction.response.send_message(
                 "You don't appear to have a minesweeper game Active, use //minesweeper to start one :)"
@@ -145,13 +151,21 @@ class Fun(commands.Cog):
             )
 
         col = self.minesweeper_games[interaction.user.id].cols.index(column.upper())
-        if self.minesweeper_games[interaction.user.id].user_board[row - 1][col] != "#" and self.minesweeper_games[interaction.user.id].user_board[row - 1][col] != "f":
+        if (
+            self.minesweeper_games[interaction.user.id].user_board[row - 1][col] != "#"
+            and self.minesweeper_games[interaction.user.id].user_board[row - 1][col]
+            != "f"
+        ):
             return await interaction.response.send_message(
                 "You've already uncovered this!", ephemeral=True
             )
 
         # NOTE !! This will NOT stop a user from "clicking" on a flag
-        if is_flag and self.minesweeper_games[interaction.user.id].user_board[row - 1][col] == "f":
+        if (
+            is_flag
+            and self.minesweeper_games[interaction.user.id].user_board[row - 1][col]
+            == "f"
+        ):
             return await interaction.response.send_message(
                 "This is already a flag !", ephemeral=True
             )
