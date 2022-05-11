@@ -118,7 +118,7 @@ class Misc(commands.Cog):
         if len(choices) < 2:
             await ctx.send("Not enough options to pick from.")
         else:
-            await ctx.send(f"I ch{randint(1,6)*'o'}se: {choice(choices)}")
+            await ctx.send(f"I ch{randint(2,9)*'o'}se: {choice(choices)}")
 
     @commands.command(usage="flip <user>")
     async def flip(self, ctx, user: discord.Member = None):
