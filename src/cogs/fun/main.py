@@ -29,9 +29,7 @@ def gen_mine_help() -> discord.Embed:
         description=MINESWEEPER_HELP,
         color=discord.Color.blurple(),
     )
-    em.set_image(
-        url="https://i.imgur.com/YwFG9vU.png"
-    )  # Uses Beholder, will need to be updated once it goes live
+    em.set_image(url="https://i.imgur.com/xXR4rwn.gif")
     em.set_footer(
         text="Made with 💖 by Florence",
         icon_url="https://c.tenor.com/Gxa1JfN3334AAAAC/dm4uz3-sakamoto.gif",  # Spin gif
