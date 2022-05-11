@@ -11,7 +11,7 @@ Main File, run this to run the bot
 # COGS TO LOAD
 # Uses /cogs/{cog_name}/main to load them
 # All CogNames are the same as their folder names
-COGS = ["admin", "misc", "info"]
+COGS = ["admin", "misc", "info", "fun"]
 
 # Change this as you want
 bannerstr = f"""
