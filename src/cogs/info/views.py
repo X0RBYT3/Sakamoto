@@ -136,6 +136,12 @@ class AboutView(discord.ui.View):
                 label="🤖 Check out my Code!", url="https://github.com/Nekurone/Sakamoto"
             )
         )
+        self.add_item(
+            discord.ui.Button(
+                label="Invite",
+                url="https://discord.com/api/oauth2/authorize?client_id=420667061900017664&permissions=52288&scope=bot%20applications.commands",
+            )
+        )
 
     @discord.ui.button(
         label="Suggest a Feature", style=discord.ButtonStyle.success, emoji="📄"
