@@ -15,12 +15,19 @@
   <a href="https://github.com/Nekurone/Sakamoto">
     <img src="https://i.kym-cdn.com/photos/images/newsfeed/000/708/396/3d6.gif" alt="Logo">
   </a>
-
 <h1 align="center">Sakamoto</h1>
 
   <p align="center">
     A Discord Bot with no particular aim, currently has a handful of neat features, with more being added regularly.
     <br />
+    <br />
+    <a href="http://tiny.cc/qthruz">
+       <img src="https://www.svgrepo.com/show/353655/discord-icon.svg",alt=invite, height=100, width=100>
+      <br></br>
+      <strong>Invite</strong>
+    </a>
+    <br />
+    ---------------------------------------
     <br />
     <a href="#about-the-project"><strong>View Demo</strong></a>
     ·
@@ -59,7 +66,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+[![Product Name Screen Shot][product-screenshot]](http://tiny.cc/qthruz)
 
  A Discord Bot with no particular aim, currently has a handful of neat features, with more being added regularly. Has a **strong** focus on end user UX thanks to Discord's Interactions.
 
