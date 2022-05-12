@@ -20,7 +20,7 @@
     <br />
     <br />
     <a href="http://tiny.cc/qthruz">
-       <img src="https://www.svgrepo.com/show/353655/discord-icon.svg",alt=invite, height=100, width=100>
+       <img src="https://www.svgrepo.com/show/353655/discord-icon.svg",alt="invite", height=100, width=100>
       <br></br>
       <strong>Invite</strong>
     </a>
