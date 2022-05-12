@@ -14,14 +14,13 @@
     <img src="https://i.kym-cdn.com/photos/images/newsfeed/000/708/396/3d6.gif" alt="Logo">
   </a>
 <h1 align="center">Sakamoto</h1>
-
-  <p align="center">
+  <p>
     A Discord Bot with no particular aim, currently has a handful of neat features, with more being added regularly.
-    <br />
+  </p>
     <br />
     <a href="http://tiny.cc/qthruz">
-       <img src="https://www.svgrepo.com/show/353655/discord-icon.svg",alt="invite", height=100, width=100>
-      <br></br>
+       <img src="https://www.svgrepo.com/show/353655/discord-icon.svg" alt="invite" height="100" width="100">
+      <br />
       <strong>Invite</strong>
     </a>
     <br />
@@ -32,7 +31,6 @@
     <a href="https://github.com/Nekurone/Sakamoto/issues">Report Bug</a>
     ·
     <a href="https://github.com/Nekurone/Sakamoto/issues">Request Feature</a>
-  </p>
 </div>
 
 
