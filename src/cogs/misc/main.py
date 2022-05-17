@@ -33,27 +33,14 @@ class Misc(commands.Cog):
             self.custom_roles = json.load(open("roles.json"))
         else:
             self.custom_roles = {}
-        if exists("reqs.json"):
-            self.reqs = json.load(open("reqs.json"))
-        else:
-            self.reqs = []
 
     # Custom roles stuff
-
+    # This is mostly for my own server, but if you find a way of using it on yours, be my guest.
     # This command name is way too long
-    @commands.hybrid_command(name="rolereq")
-    @commands.has_permissions(manage_roles=True)
-    async def set_role_color_requirement(self, ctx: commands.Context, role: Role):
-        if len(self.reqs) >= 1:
-            self.reqs[0] = role.id
-        else:
-            self.reqs.append(role.id)
-        with open("reqs.json", "w") as f:
-            json.dump(self.reqs, f, ensure_ascii=False, indent=4)
-        await ctx.send("Set the role " + role.name + " as requirement for role color !")
 
     @commands.hybrid_command(name="rolename", aliases=["rname"])
     async def set_role_name(self, ctx: commands.Context, *, name: str):
+        """Change the name of your custom role"""
         if str(ctx.author.id) not in self.custom_roles:
             await ctx.send("You do not have a custom role !", ephemeral=True)
             return
@@ -63,28 +50,15 @@ class Misc(commands.Cog):
         )
         oldname = custom_role.name
         await custom_role.edit(name=name)
-        await ctx.send(
-            "Changed your role name from `{0}` to `{1}`".format(oldname, name)
-        )
+        await ctx.send(f"Changed your role name from `{oldname}` to `{name}")
 
     @commands.hybrid_command(
         name="rolecolor", aliases=["rolecolour", "rcolor", "rcolour"]
     )
     async def rolecolor(self, ctx: commands.Context, *, color: str):
+        """Change the colour of your custom role"""
         if str(ctx.author.id) not in self.custom_roles:
             return
-        if len(self.reqs) >= 1:
-            reqrole = discord.utils.find(
-                lambda r: r.id == self.reqs[0],
-                ctx.message.guild.roles,
-            )
-            if reqrole not in ctx.author.roles:
-                await ctx.send(
-                    "You need to have the role "
-                    + reqrole.name
-                    + " to run this command !"
-                )
-                return
         custom_role = discord.utils.find(
             lambda r: r.id == int(self.custom_roles[str(ctx.author.id)]),
             ctx.message.guild.roles,
@@ -102,29 +76,33 @@ class Misc(commands.Cog):
         try:
             old_color = custom_role.color
             await custom_role.edit(color=d_color)
-            await ctx.send(
-                "Changed your colour from {0} to {1}".format(old_color, d_color)
-            )
+            await ctx.send(f"Changed your colour from {old_color} to  {d_color}")
         except Exception:
             await ctx.send("Out of range: #000000 to #FFFFFF")
 
     @commands.hybrid_command(name="roleinit", aliases=["rinit"])
     @commands.has_permissions(manage_roles=True)
     async def roleinit(self, ctx, member: discord.Member):
-        new_role = await ctx.guild.create_role(name="{0} Role".format(member.name))
+        """Initialise a role for someone."""
+        if str(member.id) in self.custom_roles:
+            custom_role = discord.utils.find(
+                lambda r: r.id == int(self.custom_roles[str(ctx.author.id)]),
+                ctx.message.guild.roles,
+            )
+            return await ctx.send(f"Hey, you already have {custom_role.name}")
+        new_role = await ctx.guild.create_role(name=f"{member.name}'s Role")
         await member.add_roles(new_role)
         self.custom_roles[str(member.id)] = str(new_role.id)
         with open("roles.json", "w") as f:
             json.dump(self.custom_roles, f, ensure_ascii=False, indent=4)
         await ctx.send(
-            "Done! {0} your custom role is ready! Use !rolename (!rname) to edit!".format(
-                member.mention
-            )
+            f"Done! {member.mention} your custom role is ready! Use !rolename (!rname) to edit!"
         )
 
     @commands.hybrid_command(name="roledelete", aliases=["rdelete"])
     @commands.has_permissions(manage_roles=True)
     async def roledelete(self, ctx, member: discord.Member):
+        """Deletes a defunct custom role"""
         try:
             custom_role = discord.utils.find(
                 lambda r: r.id == int(self.custom_roles[str(member.id)]),
