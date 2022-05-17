@@ -1,3 +1,5 @@
+from os.path import exists
+import json
 import time
 import re
 import typing
@@ -10,6 +12,7 @@ import discord
 from discord.app_commands import Choice
 from discord.ext import commands
 from discord import app_commands
+from discord.role import Role
 
 from core.utils.chat_formatter import escape
 from cogs.misc.views import PollView
@@ -26,6 +29,114 @@ class Misc(commands.Cog):
 
     def __init__(self, client):
         self.client = client
+        if exists("roles.json"):
+            self.custom_roles = json.load(open("roles.json"))
+        else:
+            self.custom_roles = {}
+        if exists("reqs.json"):
+            self.reqs = json.load(open("reqs.json"))
+        else:
+            self.reqs = []
+
+    # Custom roles stuff
+
+    # This command name is way too long
+    @commands.hybrid_command(name="rolereq")
+    @commands.has_permissions(manage_roles=True)
+    async def set_role_color_requirement(self, ctx: commands.Context, role: Role):
+        if len(self.reqs) >= 1:
+            self.reqs[0] = role.id
+        else:
+            self.reqs.append(role.id)
+        with open("reqs.json", "w") as f:
+            json.dump(self.reqs, f, ensure_ascii=False, indent=4)
+        await ctx.send("Set the role " + role.name + " as requirement for role color !")
+
+    @commands.hybrid_command(name="rolename", aliases=["rname"])
+    async def set_role_name(self, ctx: commands.Context, *, name: str):
+        if str(ctx.author.id) not in self.custom_roles:
+            await ctx.send("You do not have a custom role !", ephemeral=True)
+            return
+        custom_role = discord.utils.find(
+            lambda r: r.id == int(self.custom_roles[str(ctx.author.id)]),
+            ctx.message.guild.roles,
+        )
+        oldname = custom_role.name
+        await custom_role.edit(name=name)
+        await ctx.send(
+            "Changed your role name from `{0}` to `{1}`".format(oldname, name)
+        )
+
+    @commands.hybrid_command(
+        name="rolecolor", aliases=["rolecolour", "rcolor", "rcolour"]
+    )
+    async def rolecolor(self, ctx: commands.Context, *, color: str):
+        if str(ctx.author.id) not in self.custom_roles:
+            return
+        if len(self.reqs) >= 1:
+            reqrole = discord.utils.find(
+                lambda r: r.id == self.reqs[0],
+                ctx.message.guild.roles,
+            )
+            if reqrole not in ctx.author.roles:
+                await ctx.send(
+                    "You need to have the role "
+                    + reqrole.name
+                    + " to run this command !"
+                )
+                return
+        custom_role = discord.utils.find(
+            lambda r: r.id == int(self.custom_roles[str(ctx.author.id)]),
+            ctx.message.guild.roles,
+        )
+        color = color.replace("#", "").strip()
+        color = "".join(filter(lambda x: (x.lower() in "abcdef" or x.isdigit()), color))
+        print(color)
+        try:
+            d_color = discord.Colour(int(f"0x{color}", 16))
+        except ValueError:
+            return await ctx.send("Not even close to hex.")
+        if d_color == custom_role.color:
+            await ctx.send("Wait that's the same color")
+            return
+        try:
+            old_color = custom_role.color
+            await custom_role.edit(color=d_color)
+            await ctx.send(
+                "Changed your colour from {0} to {1}".format(old_color, d_color)
+            )
+        except Exception:
+            await ctx.send("Out of range: #000000 to #FFFFFF")
+
+    @commands.hybrid_command(name="roleinit", aliases=["rinit"])
+    @commands.has_permissions(manage_roles=True)
+    async def roleinit(self, ctx, member: discord.Member):
+        new_role = await ctx.guild.create_role(name="{0} Role".format(member.name))
+        await member.add_roles(new_role)
+        self.custom_roles[str(member.id)] = str(new_role.id)
+        with open("roles.json", "w") as f:
+            json.dump(self.custom_roles, f, ensure_ascii=False, indent=4)
+        await ctx.send(
+            "Done! {0} your custom role is ready! Use !rolename (!rname) to edit!".format(
+                member.mention
+            )
+        )
+
+    @commands.hybrid_command(name="roledelete", aliases=["rdelete"])
+    @commands.has_permissions(manage_roles=True)
+    async def roledelete(self, ctx, member: discord.Member):
+        try:
+            custom_role = discord.utils.find(
+                lambda r: r.id == int(self.custom_roles[str(member.id)]),
+                ctx.message.guild.roles,
+            )
+            del self.custom_roles[str(member.id)]
+            with open("roles.json", "w") as f:
+                json.dump(self.custom_roles, f, ensure_ascii=False, indent=4)
+            await custom_role.delete()
+            await ctx.send("BANG! and the dirt is gone!")
+        except Exception as e:
+            await ctx.send(e)
 
     @commands.hybrid_command(name="poll", aliases=["ynpoll", "pollstart"])
     @commands.cooldown(1, 30, commands.BucketType.user)
