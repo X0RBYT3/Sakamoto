@@ -136,3 +136,7 @@ dmypy.json
 
 # DS Store 
 *.DS_Store
+
+#storage files
+roles.json
+reqs.json
