@@ -30,15 +30,11 @@ class Misc(commands.Cog):
     def __init__(self, client):
         self.client = client
         if exists("roles.json"):
-            self.custom_roles = json.load(
-                open("roles.json")
-            )
+            self.custom_roles = json.load(open("roles.json"))
         else:
             self.custom_roles = {}
         if exists("reqs.json"):
-            self.reqs = json.load(
-                open("reqs.json")
-            )
+            self.reqs = json.load(open("reqs.json"))
         else:
             self.reqs = []
 
@@ -57,7 +53,7 @@ class Misc(commands.Cog):
         await ctx.send("Set the role " + role.name + " as requirement for role color !")
 
     @commands.hybrid_command(name="rolename", aliases=["rname"])
-    async def set_role_name(self, ctx: commands.Context,*, name: str):
+    async def set_role_name(self, ctx: commands.Context, *, name: str):
         if str(ctx.author.id) not in self.custom_roles:
             await ctx.send("You do not have a custom role !", ephemeral=True)
             return
@@ -71,7 +67,9 @@ class Misc(commands.Cog):
             "Changed your role name from `{0}` to `{1}`".format(oldname, name)
         )
 
-    @commands.hybrid_command(name="rolecolor", aliases=['rolecolour', 'rcolor', 'rcolour'])
+    @commands.hybrid_command(
+        name="rolecolor", aliases=["rolecolour", "rcolor", "rcolour"]
+    )
     async def rolecolor(self, ctx: commands.Context, *, color: str):
         if str(ctx.author.id) not in self.custom_roles:
             return
@@ -81,28 +79,34 @@ class Misc(commands.Cog):
                 ctx.message.guild.roles,
             )
             if reqrole not in ctx.author.roles:
-                await ctx.send('You need to have the role ' + reqrole.name + ' to run this command !')
+                await ctx.send(
+                    "You need to have the role "
+                    + reqrole.name
+                    + " to run this command !"
+                )
                 return
         custom_role = discord.utils.find(
             lambda r: r.id == int(self.custom_roles[str(ctx.author.id)]),
             ctx.message.guild.roles,
         )
-        color = color.replace('#', '').strip()
-        color = ''.join(filter(lambda x: (x.lower() in 'abcdef' or x.isdigit()), color))
+        color = color.replace("#", "").strip()
+        color = "".join(filter(lambda x: (x.lower() in "abcdef" or x.isdigit()), color))
         print(color)
         try:
             d_color = discord.Colour(int(f"0x{color}", 16))
         except ValueError:
-            return await ctx.send('Not even close to hex.')
+            return await ctx.send("Not even close to hex.")
         if d_color == custom_role.color:
-            await ctx.send('Wait that\'s the same color')
+            await ctx.send("Wait that's the same color")
             return
         try:
             old_color = custom_role.color
             await custom_role.edit(color=d_color)
-            await ctx.send('Changed your colour from {0} to {1}'.format(old_color, d_color))
+            await ctx.send(
+                "Changed your colour from {0} to {1}".format(old_color, d_color)
+            )
         except Exception:
-            await ctx.send('Out of range: #000000 to #FFFFFF')
+            await ctx.send("Out of range: #000000 to #FFFFFF")
 
     @commands.hybrid_command(name="roleinit", aliases=["rinit"])
     @commands.has_permissions(manage_roles=True)
