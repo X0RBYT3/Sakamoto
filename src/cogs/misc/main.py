@@ -180,15 +180,9 @@ class Misc(commands.Cog):
         result_em.title = f"{ctx.author} asked '{question}' {randint(4,9)*'a'}nd the result is: **{result}**"
         result_em.description = f"{yes_l + no_l} Voted and they voted: {result}"
 
-        # There's defo an easier way to write this in like 2 lines.
-        if yes_l == 0:
-            yes_s = "Nobody!"
-        else:
-            yes_s = ", ".join(poll.users_yes)
-        if no_l == 0:
-            no_s = "Nobody!"
-        else:
-            no_s = ", ".join(poll.users_no)
+        # Easily wrote it into 2 lines -Shad
+        yes_s = "Nobody!" if yes_l == 0 else ", ".join(poll.users_yes)
+        no_s = "Nobody!" if no_l == 0 else ", ".join(poll.users_no)
 
         # Emojis in the fields?
         result_em.add_field(name="People who voted Yes", value=yes_s, inline=True)
