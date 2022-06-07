@@ -166,29 +166,21 @@ class Misc(commands.Cog):
             title="Placeholder",
             description="Placeholder",
         )
-        # There's probably an easier way to write this.
-        if yes_l > no_l:
-            result = "Yes"
-            result_em.color = discord.Color.green()
-        elif yes_l < no_l:
-            result = "No"
-            result_em.color = discord.Color.red()
-        else:
-            result = "Draw"
-            result_em.color = discord.Color.yellow()
+
+        responses = [
+            ("No", discord.Color.red()),
+            ("Draw", discord.Color.yellow()),
+            ("Yes", discord.Color.green()),
+        ]
+        result, result_em.color = responses[((yes_l > no_l) - (yes_l < no_l)) + 1]
+
         # Emoji time?
         result_em.title = f"{ctx.author} asked '{question}' {randint(4,9)*'a'}nd the result is: **{result}**"
         result_em.description = f"{yes_l + no_l} Voted and they voted: {result}"
 
-        # There's defo an easier way to write this in like 2 lines.
-        if yes_l == 0:
-            yes_s = "Nobody!"
-        else:
-            yes_s = ", ".join(poll.users_yes)
-        if no_l == 0:
-            no_s = "Nobody!"
-        else:
-            no_s = ", ".join(poll.users_no)
+        # Easily wrote it into 2 lines -Shad
+        yes_s = "Nobody!" if yes_l == 0 else ", ".join(poll.users_yes)
+        no_s = "Nobody!" if no_l == 0 else ", ".join(poll.users_no)
 
         # Emojis in the fields?
         result_em.add_field(name="People who voted Yes", value=yes_s, inline=True)
