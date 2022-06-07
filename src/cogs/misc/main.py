@@ -201,6 +201,35 @@ class Misc(commands.Cog):
         else:
             await ctx.send(f"I ch{randint(2,9)*'o'}se: {choice(choices)}")
 
+    @commands.command(name="8ball", usage="<question>")
+    async def _8ball(self, ctx, _: str) -> None:
+        # TODO: Make into Interaction
+        # NOTE(Shad): I require the user to pass a question but then I don't use it lol
+        """Ask the mysterious 8ball a yes or no question."""
+        BALL_RESPONSES = [
+            "It is certain",
+            "Without a doubt",
+            "You may rely on it",
+            "Yes definitely",
+            "It is decidedly so",
+            "As I see it, yes",
+            "Most likely",
+            "Yes",
+            "Outlook good",
+            "Signs point to yes",
+            "Reply hazy try again",
+            "Better not tell you now",
+            "Ask again later",
+            "Cannot predict now",
+            "Concentrate and ask again",
+            "Don't count on it",
+            "Outlook not so good",
+            "My sources say no",
+            "Very doubtful",
+            "My reply is no",
+        ]
+        await ctx.send(choice(BALL_RESPONSES))
+
     @commands.command(usage="flip <user>")
     async def flip(self, ctx, user: discord.Member = None):
         # TODO: Make into Interaction
