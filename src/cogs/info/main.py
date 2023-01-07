@@ -95,7 +95,7 @@ class Info(commands.Cog):
         )
         em.add_field(name="Start time", value=str(self.client.uptime)[:-7], inline=True)
         em.set_footer(
-            text="Made with 💖 by Florence",
+            text="Made with 💖 by Xorhash",
             icon_url="https://media.giphy.com/media/qjPD3Me0OCvFC/giphy.gif",
         )
         await ctx.send(embed=em)

@@ -32,7 +32,7 @@ def gen_mine_help() -> discord.Embed:
     )
     em.set_image(url="https://i.imgur.com/xXR4rwn.gif")
     em.set_footer(
-        text="Made with 💖 by Florence",
+        text="Made with 💖 by Xorhash",
         icon_url="https://c.tenor.com/Gxa1JfN3334AAAAC/dm4uz3-sakamoto.gif",  # Spin gif
     )
     return em
@@ -190,7 +190,7 @@ class Fun(commands.Cog):
                     url="https://data.whicdn.com/images/234478539/original.jpg"
                 )
                 msg.set_footer(
-                    text="Made with 💖 by Florence",
+                    text="Made with 💖 by Xorhash",
                     icon_url="https://c.tenor.com/Gxa1JfN3334AAAAC/dm4uz3-sakamoto.gif",  # Spin gif
                 )
                 await interaction.response.send_message(embed=msg)

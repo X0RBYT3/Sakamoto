@@ -33,7 +33,7 @@ def get_client_uptime(uptime, brief=False):
 def gen_about_embed(client: discord.Client) -> discord.Embed:
     embed = discord.Embed(
         title="About Me!",
-        description="Hi, I'm **Sakamoto**, a Discord Bot by ``Florence#5005``,I'm still in my early stages so be sure to check back often for updates.\n\nAlternatively, if you have any suggestions for me, use `/suggest` to pass forward a suggestion.",
+        description="Hi, I'm **Sakamoto**, a Discord Bot by ``Xorhash#4727``,I'm still in my early stages so be sure to check back often for updates.\n\nAlternatively, if you have any suggestions for me, use `/suggest` to pass forward a suggestion.",
         url="https://github.com/Nekurone/Sakamoto/",
         color=0xC55050,  # Nice light red
     )
@@ -50,7 +50,7 @@ def gen_about_embed(client: discord.Client) -> discord.Embed:
     embed.add_field(name="Python Version", value=platform.python_version(), inline=True)
     embed.add_field(name="Uptime", value=get_client_uptime(client.uptime, brief=True))
     embed.set_footer(
-        text="Made with 💖 by Florence",
+        text="Made with 💖 by Xorhash",
         icon_url="https://c.tenor.com/Gxa1JfN3334AAAAC/dm4uz3-sakamoto.gif",  # Spin gif
     )
     return embed

@@ -182,7 +182,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-For any queries pertaining to the code, running the bot, or anything of the sorts, add me on Discord: `Florence#5005`
+For any queries pertaining to the code, running the bot, or anything of the sorts, add me on Discord: `Xorhash#4727`
 
 Alternatively, join my [Programming Discord](https://discord.gg/y4nK5XWs)
 

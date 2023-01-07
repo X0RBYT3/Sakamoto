@@ -217,7 +217,7 @@ class MineSweeperGames:
             description=msg,
         )
         emb.set_footer(
-            text="Made with 💖 by Florence",
+            text="Made with 💖 by Xorhash",
             icon_url="https://c.tenor.com/Gxa1JfN3334AAAAC/dm4uz3-sakamoto.gif",  # Spin gif
         )
         return emb
