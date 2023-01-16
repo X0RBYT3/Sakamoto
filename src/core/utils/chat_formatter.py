@@ -206,7 +206,7 @@ def bordered(*columns: Sequence[str], ascii_border: bool = False) -> str:
 def embed_menu(
     title: str,
     pages: Iterator[str],
-    footer="Made with 💖 by Florence.",
+    footer="Made with 💖 by Xorhash.",
     color=0x74A7FE,
     author=None,
 ) -> Iterator[Embed]:
