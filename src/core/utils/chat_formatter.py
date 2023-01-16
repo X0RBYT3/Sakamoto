@@ -7,6 +7,9 @@ from discord import Embed
 
 import discord
 
+_CF_COLORS = (0xFFCA1F, 0x198BCC, 0xFF2020)
+_SUCCESS_GREEN = 0x28A745
+_ALERT_AMBER = 0xFFBF00
 
 def error(text: str) -> str:
     """Get text prefixed with an error emoji.
