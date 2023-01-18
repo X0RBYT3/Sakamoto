@@ -11,7 +11,7 @@ Minesweeper is a game where mines are hidden in a grid of squares. Safe squares 
 
 
 `/minesweeper` has several options,
-`/minesweeper random` -> A random board 
+`/minesweeper random` -> A random board
 `/minesweeper daily` -> Today's game
 `/minesweeper my daily` -> Your game of the day!
 `/minesweeper mysweep` -> A game tied to your user ID.
@@ -19,7 +19,7 @@ Minesweeper is a game where mines are hidden in a grid of squares. Safe squares 
 Each game can be customised with `width` and `height` to your liking.
 
 Once you're in a game, use `/ms [column] [row]` to pick your cell to uncover use `/ms [column] [row] True` to place a flag !
-You win the game once you've opened every safe square without blowing up! 
+You win the game once you've opened every safe square without blowing up!
 
 Good luck! 💣"""
 
