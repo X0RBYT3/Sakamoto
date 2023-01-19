@@ -1,8 +1,11 @@
+import string
+from typing import List, Literal, Optional
+import time
+
 import discord
 from discord.ext import commands
 from discord import app_commands
-from typing import List, Literal, Optional
-import string
+
 from cogs.fun import minesweeper
 
 # from cogs.fun import views
@@ -81,6 +84,17 @@ class Fun(commands.Cog):
             for choices in choices
             if current.lower() in choices.lower()
         ]
+
+    @app_commands.command(
+        name="roll",
+        description="Rolls",
+        aliases=["checkem", "check", "riggity", "dubs"],
+    )
+    async def num_roll(self, ctx: commands.Context):
+        # I used to use the last 8 digits of the message ID,
+        # but since this is a Hybrid, it won't always have a message ID, so we're using Epoch Time.
+        epoch_time = int(time.time())
+        await ctx.send(f"Your roll: {epoch_time}.")
 
     @app_commands.command(name="minesweeper", description="Plays minesweeper")
     @app_commands.autocomplete(choices=minesweep_autocomplete)
