@@ -3,6 +3,7 @@ from datetime import datetime
 import discord
 from discord.ext import commands
 
+from core.ansihelp import AnsiHelp
 from core.config import VERSION
 from core.cogmanager import cogs_manager
 
@@ -19,7 +20,12 @@ intents.message_content = True
 
 class sakaClient(commands.Bot):
     def __init__(self, cogs: list, secrets: dict, prefix: str):
-        super().__init__(command_prefix=prefix, case_insensitive=True, intents=intents)
+        super().__init__(
+            command_prefix=prefix,
+            case_insensitive=True,
+            intents=intents,
+            help_command=AnsiHelp(),
+        )
         self.secrets = secrets
         self.uptime = datetime.now()
         self._version = VERSION
